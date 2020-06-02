@@ -32,7 +32,7 @@ public class Client {
             username_tmp = input.readLine();
             System.out.println("请输入密码：");
             password_tmp = input.readLine();
-            dos.writeUTF("!!" + username_tmp + "##" + password_tmp + "##");
+            dos.writeUTF("**" + username_tmp + "##" + password_tmp + "##");
             dos.flush();
             client.shutdownOutput();
             String ret = dis.readUTF();
