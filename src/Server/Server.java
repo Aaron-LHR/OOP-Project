@@ -39,6 +39,7 @@ public class Server {
                 System.out.println("成功！");
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                 DataInputStream in = new DataInputStream(socket.getInputStream());
+
                 String buff = in.readUTF();
                 System.out.println(buff);
                 if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
