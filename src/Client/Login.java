@@ -26,6 +26,7 @@ public class Login {
             System.out.println("登录失败");
         }
         dos.close();
+        dis.close();
         client.close();
     }
 }
