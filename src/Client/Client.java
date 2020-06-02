@@ -1,6 +1,5 @@
 package Client;
 
-import UI.C;
 
 import java.io.*;
 import java.net.Socket;

@@ -27,6 +27,11 @@ public class Server {
 
             String buff = in.readUTF();
             System.out.println(buff);
+            if (buff.charAt(0)=='*'&&buff.charAt(1)=='*'){
+                String[] tmp=buff.split("##");
+                tmp[0]=tmp[0].substring(2);
+                new Register(tmp[0],tmp[1],socket).start();
+            }
             if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
                 String[] tmp=buff.split("##");
                 tmp[0]=tmp[0].substring(2);
