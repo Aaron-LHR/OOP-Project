@@ -1,10 +1,10 @@
 package Server;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,5 +29,41 @@ public class Server {
     }
     public static void main(String[] args) {
         init();
+        try {
+            ServerSocket serverSocket=new ServerSocket(Server.port);
+
+
+            while (true){
+                System.out.println("等待中。。。");
+                Socket socket=serverSocket.accept();
+                System.out.println("成功！");
+                OutputStream outputStream = socket.getOutputStream();
+                InputStream inputStream=socket.getInputStream();
+                System.out.println(1);
+                byte[] bytes = new byte[1024];
+                int len;
+                StringBuffer buff = new StringBuffer();
+                while ((len = inputStream.read(bytes)) != -1) {
+                    buff.append(new String(bytes, 0, len, "UTF-8"));
+                }
+                System.out.println(buff);
+                if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
+                    String[] tmp=buff.toString().split("##");
+                    if(Server.account.get(tmp[0]).equals(tmp[1])){
+                        outputStream.write("1".getBytes("UTF-8"));
+                        InetAddress inetAddress=socket.getInetAddress();
+                        System.out.println(tmp[0]+":"+inetAddress.getHostAddress()+"online!");
+                        Server.online.put(tmp[0],inetAddress.getHostAddress());
+                    }
+                    else outputStream.write("0".getBytes("UTF-8"));
+                }
+                System.out.println();
+                inputStream.close();
+                outputStream.close();
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
