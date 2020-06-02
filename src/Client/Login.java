@@ -15,7 +15,7 @@ public class Login {
         Socket client = new Socket("localhost",1111);
         DataOutputStream dos = new DataOutputStream(client.getOutputStream());
         DataInputStream dis = new DataInputStream(client.getInputStream());
-        dos.writeUTF("!!" + username + "##" + password + "##");
+        dos.writeUTF("**" + username + "##" + password + "##");
         dos.flush();
         client.shutdownOutput();
         String ret = dis.readUTF();
