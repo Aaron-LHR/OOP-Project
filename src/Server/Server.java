@@ -37,29 +37,24 @@ public class Server {
                 System.out.println("等待中。。。");
                 Socket socket=serverSocket.accept();
                 System.out.println("成功！");
-                OutputStream outputStream = socket.getOutputStream();
-                InputStream inputStream=socket.getInputStream();
-                System.out.println(1);
-                byte[] bytes = new byte[1024];
-                int len;
-                StringBuffer buff = new StringBuffer();
-                while ((len = inputStream.read(bytes)) != -1) {
-                    buff.append(new String(bytes, 0, len, "UTF-8"));
-                }
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                String buff = in.readUTF();
                 System.out.println(buff);
                 if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
-                    String[] tmp=buff.toString().split("##");
+                    String[] tmp=buff.split("##");
+                    tmp[0]=tmp[0].substring(2);
                     if(Server.account.get(tmp[0]).equals(tmp[1])){
-                        outputStream.write("1".getBytes("UTF-8"));
+                        out.writeUTF("1");
                         InetAddress inetAddress=socket.getInetAddress();
-                        System.out.println(tmp[0]+":"+inetAddress.getHostAddress()+"online!");
+                        System.out.println(tmp[0]+":"+inetAddress.getHostAddress()+":online!");
                         Server.online.put(tmp[0],inetAddress.getHostAddress());
                     }
-                    else outputStream.write("0".getBytes("UTF-8"));
+                    else out.writeUTF("0");
                 }
                 System.out.println();
-                inputStream.close();
-                outputStream.close();
+                in.close();
+                out.close();
                 socket.close();
             }
         } catch (IOException e) {

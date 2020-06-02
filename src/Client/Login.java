@@ -17,8 +17,6 @@ public class Login {
         DataInputStream dis = new DataInputStream(client.getInputStream());
         dos.writeUTF("!!" + username + "##" + password + "##");
         dos.flush();
-
-
         client.shutdownOutput();
         String ret = dis.readUTF();
         if (ret.equals("1")) {
