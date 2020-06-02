@@ -12,6 +12,32 @@ public class Server {
     public static int port=1111;
     public static Map<String,String> account=new HashMap<>(){};//name,password
     public static Map<String,String> online=new HashMap<>();//online user
+
+    public static void main(String[] args) {
+        init();
+        try {
+            ServerSocket serverSocket=new ServerSocket(Server.port);
+            System.out.println("等待中。。。");
+            Socket socket=serverSocket.accept();
+            System.out.println("成功！");
+            InputStream inputStream=socket.getInputStream();
+            OutputStream outputStream=socket.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outputStream);
+            DataInputStream in = new DataInputStream(inputStream);
+
+            String buff = in.readUTF();
+            System.out.println(buff);
+            if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
+                String[] tmp=buff.split("##");
+                tmp[0]=tmp[0].substring(2);
+                new Login(tmp[0],tmp[1],socket).start();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     public static void init(){
         try {
             String line;
@@ -24,41 +50,6 @@ public class Server {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public static void main(String[] args) {
-        init();
-        try {
-            ServerSocket serverSocket=new ServerSocket(Server.port);
-
-
-            while (true){
-                System.out.println("等待中。。。");
-                Socket socket=serverSocket.accept();
-                System.out.println("成功！");
-                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                DataInputStream in = new DataInputStream(socket.getInputStream());
-
-                String buff = in.readUTF();
-                System.out.println(buff);
-                if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){
-                    String[] tmp=buff.split("##");
-                    tmp[0]=tmp[0].substring(2);
-                    if(Server.account.get(tmp[0]).equals(tmp[1])){
-                        out.writeUTF("1");
-                        InetAddress inetAddress=socket.getInetAddress();
-                        System.out.println(tmp[0]+":"+inetAddress.getHostAddress()+":online!");
-                        Server.online.put(tmp[0],inetAddress.getHostAddress());
-                    }
-                    else out.writeUTF("0");
-                }
-                System.out.println();
-                in.close();
-                out.close();
-                socket.close();
-            }
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
