@@ -15,8 +15,8 @@ class runnableTest implements Runnable {
     public void run() {
         try {
             Client client = new Client("39.97.126.242",1111);
-            client.Login();
-            client.register();
+//            client.Login();
+//            client.register();
             client.exit();
         } catch (IOException e) {
             e.printStackTrace();

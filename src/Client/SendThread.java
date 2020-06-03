@@ -9,10 +9,12 @@ import java.net.SocketException;
 public class SendThread implements Runnable {
     private DataOutputStream dos;
     private BufferedReader input;
+    private String username;
 
-    public SendThread(DataOutputStream dos, BufferedReader input) {
+    public SendThread(DataOutputStream dos, String username) {
         this.dos = dos;
-        this.input = input;
+        this.username = username;
+        input = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
@@ -20,7 +22,7 @@ public class SendThread implements Runnable {
         while (true) {
             try {
                 String string = input.readLine();
-                dos.writeUTF(string);
+                dos.writeUTF("@" + username + "@abc" + "@" + string);
                 dos.flush();
                 if (string.equals("bye")) {
                     break;

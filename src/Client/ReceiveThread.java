@@ -18,8 +18,9 @@ public class ReceiveThread implements Runnable {
         while (true) {
             try {
                 String string = dis.readUTF();
-                System.out.println("对方：" + string);
-                if (string.equals("bye")) {
+                String[] output = string.split("@");
+                System.out.println(output[1] + ":" + output[2]);
+                if (output.equals("bye")) {
                     break;
                 }
             } catch (IOException e) {
