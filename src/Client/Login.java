@@ -19,7 +19,7 @@ public class Login {
         dos.flush();
         client.shutdownOutput();
         String ret = dis.readUTF();
-        if (ret.equals("1")) {
+        if (ret.equals("0")) {
             System.out.println("登录成功");
         }
         else {

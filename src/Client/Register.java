@@ -22,14 +22,14 @@ public class Register {
                 System.out.println("两次密码不一致，请重新输入");
             }
         }
-        Socket client = new Socket("localhost",1111);
+        Socket client = new Socket("39.97.126.242",1111);
         DataOutputStream dos = new DataOutputStream(client.getOutputStream());
         DataInputStream dis = new DataInputStream(client.getInputStream());
         dos.writeUTF("**" + username + "##" + password + "##");
         dos.flush();
         client.shutdownOutput();
         String ret = dis.readUTF();
-        if (ret.equals("1")) {
+        if (ret.equals("0")) {
             System.out.println("注册成功");
         }
         else {

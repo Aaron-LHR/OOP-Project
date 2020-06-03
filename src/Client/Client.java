@@ -35,13 +35,13 @@ public class Client {
             dos.flush();
             client.shutdownOutput();
             String ret = dis.readUTF();
-            if (ret.equals("1")) {
+            if (ret.equals("0")) {
                 System.out.println("登录成功");
                 username = username_tmp;
                 password = password_tmp;
                 return;
             }
-            else if (ret.equals("0")){
+            else if (ret.equals("1")){
                 System.out.println("登录失败，请重试");
 //                return false;
             }
@@ -69,7 +69,7 @@ public class Client {
             dos.flush();
             client.shutdownOutput();
             String ret = dis.readUTF();
-            if (ret.equals("1")) {
+            if (ret.equals("0")) {
                 System.out.println("注册成功");
                 return;
             }
