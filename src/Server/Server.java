@@ -77,6 +77,12 @@ public class Server {
                         out.flush();
                     }
                 }
+
+                if (buff.indexOf("##ADDGROUP##")==0){//创建群聊：##ADDGROUP##groupname##name1##name2##name3
+                    buff=buff.substring(12);
+                    String[] tmp=buff.split("##");
+                    new AddGroup(tmp,socket).start();
+                }
             }
         }
         catch (IOException e) {

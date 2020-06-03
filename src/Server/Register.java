@@ -19,7 +19,7 @@ public class Register extends Thread{
             DataInputStream in=new DataInputStream(socket.getInputStream());
             FileWriter writer = new FileWriter(new File("Account"), true);
             if (Server.account.get(username)!=null){
-                //表中没有重复用户名
+                //表中有重复用户名
                 Server.account.put(username,passwd);
                 out.writeUTF("1");
             }

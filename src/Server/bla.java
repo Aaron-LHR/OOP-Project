@@ -8,13 +8,35 @@ import java.util.Map;
 
 public class bla {
     public static void main(String[] args) {
-        String buff="@dsahd@1238@djsiacmxkzo@2222";
-        String[] tmp=buff.split("@");
-        int t=tmp[1].length()+tmp[2].length()+3;
-        String content= buff.substring(t);
-        System.out.println(content);
-        System.out.println(tmp[1]);
-        System.out.println(tmp[2]);
+        try {
+            String[] member={"123","abc","dede","abac"};
+            FileOutputStream fos=new FileOutputStream(new File("Group/group1"));
+            OutputStreamWriter osw= new OutputStreamWriter(fos, "UTF-8");
+
+            for(int i=1;i<member.length;i++){
+                osw.write(member[i]+" ");
+            }
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    public static void main(String[] args) {
+//
 //        InetAddress inetAddress;//声明InetAddress对象
 //        try {
 //            inetAddress= InetAddress.getLocalHost();//实例化InetAddress对象，返回本地主机
@@ -37,5 +59,5 @@ public class bla {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
-    }
+
 }
