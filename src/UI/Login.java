@@ -75,7 +75,9 @@ public class Login {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    client.Login(userText.getText(),Arrays.toString(passwordText.getPassword()));
+                    String username = userText.getText().trim();
+                    String password = new String(passwordText.getPassword()).trim();
+                    client.Login(username, password);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
