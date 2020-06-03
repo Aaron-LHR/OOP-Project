@@ -12,7 +12,7 @@ public class Login {
         username = input.readLine();
         System.out.println("请输入密码：");
         password = input.readLine();
-        Socket client = new Socket("localhost",1111);
+        Socket client = new Socket("39.97.126.242",1111);
         DataOutputStream dos = new DataOutputStream(client.getOutputStream());
         DataInputStream dis = new DataInputStream(client.getInputStream());
         dos.writeUTF("!!" + username + "##" + password + "##");
