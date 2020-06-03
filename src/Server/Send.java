@@ -5,12 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Send extends Thread {
+public class Send extends Thread {//@fromUser@content
     private String toUser;
     private String fromUser;
     private String content;
     private Socket socket;
-    public Send(String toUser, String content, String fromUser,Socket socket){
+    public Send(String fromUser, String toUser, String content, Socket socket){
         this.toUser=toUser;
         this.fromUser=fromUser;
         this.content=content;
@@ -23,12 +23,12 @@ public class Send extends Thread {
         try {
             DataOutputStream out=new DataOutputStream(socket.getOutputStream());
             DataInputStream in=new DataInputStream(socket.getInputStream());
-            if (Server.online.get(fromUser)==null){
+            if (Server.online.get(toUser)==null){
                 out.writeUTF("1");
                 out.flush();
             }
             else {
-                Socket send=new Socket(Server.online.get(toUser),Server.port);
+                Socket send=Server.online.get(toUser);
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
                 String msg="@"+fromUser+"@"+content;
                 sout.writeUTF(msg);

@@ -11,7 +11,7 @@ import java.util.Map;
 public class Server {
     public static int port=1111;
     public static Map<String,String> account=new HashMap<>(){};//name,password
-    public static Map<String,String> online=new HashMap<>();//online user
+    public static Map<String,Socket> online=new HashMap<>();//online user
     private Server(){}
     public static void main(String[] args) {
         init();
@@ -28,32 +28,54 @@ public class Server {
 
                 String buff = in.readUTF();
                 System.out.println(buff);
+
                 if (buff.charAt(0)=='*'&&buff.charAt(1)=='*'){//注册:**name##passwd##
                     String[] tmp=buff.split("##");
                     tmp[0]=tmp[0].substring(2);
                     new Register(tmp[0],tmp[1],socket).start();
                 }
+
                 if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){//登录:!!name##passwd##
                     String[] tmp=buff.split("##");
                     tmp[0]=tmp[0].substring(2);
                     new Login(tmp[0],tmp[1],socket).start();
                 }
+
                 if (buff.charAt(0)=='?'&&buff.charAt(1)=='?'){//检查对方登录状态:??name
                     String tmp=buff;
                     tmp=tmp.substring(2);
                     if (online.get(tmp)!=null){
+                        //用户在线，返回0
+                        out.writeUTF("0");
+                        out.flush();
+                    }
+                    else {
+                        //不在线，返回1
+                        out.writeUTF("1");
+                        out.flush();
+                    }
+                }
+
+                if (buff.charAt(0)=='@'){//发送信息：@fromUser@ToUser@content
+                    String[] tmp=buff.split("@");
+                    int t=tmp[1].length()+tmp[2].length()+3;
+                    String content= buff.substring(t);
+                    new Send(tmp[1],tmp[2],content,socket).start();
+                }
+
+                if (buff.charAt(0)=='-'&&buff.charAt(1)=='-'){//注销：--username
+                    String tmp=buff;
+                    tmp=tmp.substring(2);
+                    if (online.get(tmp)==null){
+                        //用户已下线，注销错误
                         out.writeUTF("1");
                         out.flush();
                     }
                     else {
+                        //完成注销
                         out.writeUTF("0");
                         out.flush();
                     }
-                }
-                if (buff.charAt(0)=='@'){//发送信息：@name@content
-                    int t=buff.indexOf("@",1);
-                    String[] tmp= {buff.substring(1,t),buff.substring(t+1)};
-                    new Send(tmp[0],tmp[1],getUsername(socket),socket).start();
                 }
             }
         }
@@ -78,7 +100,7 @@ public class Server {
         }
     }
     public static String getUsername(Socket socket){
-        for (Map.Entry<String,String > entry : online.entrySet()) {
+        for (Map.Entry<String,Socket> entry : online.entrySet()) {
             if (entry.getValue().equals(socket.getInetAddress().getHostAddress())) {
                 return entry.getKey();
             }

@@ -22,7 +22,7 @@ public class Login extends Thread {
                     InetAddress inetAddress=socket.getInetAddress();
                     System.out.println(username+":"+inetAddress.getHostAddress()+":online!");
 
-                    Server.online.put(username,inetAddress.getHostAddress());
+                    Server.online.put(username,socket);
                 }
                 else {
                     out.writeUTF("1");
