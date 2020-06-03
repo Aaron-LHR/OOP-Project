@@ -19,11 +19,12 @@ public class Register extends Thread{
             DataInputStream in=new DataInputStream(socket.getInputStream());
             FileWriter writer = new FileWriter(new File("Account"), true);
             if (Server.account.get(username)!=null){
-                out.writeUTF("0");
+                out.writeUTF("1");
             }
             writer.write("\n"+username+" "+passwd);
             writer.close();
-            out.writeUTF("1");
+            out.writeUTF("0");
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
