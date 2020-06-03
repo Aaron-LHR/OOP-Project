@@ -1,8 +1,11 @@
 package Client;
 
+import java.io.IOException;
+
 public class client2 {
-    public static void main(String[] args) {
-        new Thread(new SendThread(8888, "localhost", 7777)).start();
-        new Thread(new ReceiveThread(9999)).start();
+    public static void main(String[] args) throws IOException {
+        Client client = new Client("39.97.126.242",1111);
+        client.Login();
+        client.init();
     }
 }

@@ -1,40 +1,27 @@
 package Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 
 public class SendThread implements Runnable {
-    private int port;
-    private String toIP;
-    private int toPort;
+    private DataOutputStream dos;
+    private BufferedReader input;
 
-    public SendThread(int port, String toIP, int toPort) {
-        this.port = port;
-        this.toIP = toIP;
-        this.toPort = toPort;
+    public SendThread(DataOutputStream dos, BufferedReader input) {
+        this.dos = dos;
+        this.input = input;
     }
 
     @Override
     public void run() {
-        DatagramSocket socket = null;
-        byte[] bytes;
-        try {
-            socket = new DatagramSocket(port);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             try {
                 String string = input.readLine();
-                bytes = string.getBytes();
-                DatagramPacket packet = new DatagramPacket(bytes,0, bytes.length,new InetSocketAddress(toIP, toPort));
-                socket.send(packet);
+                dos.writeUTF(string);
+                dos.flush();
                 if (string.equals("bye")) {
                     break;
                 }
@@ -42,6 +29,5 @@ public class SendThread implements Runnable {
                 e.printStackTrace();
             }
         }
-        socket.close();
     }
 }

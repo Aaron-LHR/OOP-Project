@@ -14,7 +14,7 @@ class runnableTest implements Runnable {
     @Override
     public void run() {
         try {
-            Client client = new Client("localhost",1111);
+            Client client = new Client("39.97.126.242",1111);
             client.Login();
             client.register();
             client.exit();

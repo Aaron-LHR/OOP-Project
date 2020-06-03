@@ -33,7 +33,7 @@ public class Client {
             password_tmp = input.readLine();
             dos.writeUTF("!!" + username_tmp + "##" + password_tmp + "##");
             dos.flush();
-            client.shutdownOutput();
+//            client.shutdownOutput();
             String ret = dis.readUTF();
             if (ret.equals("0")) {
                 System.out.println("登录成功");
@@ -78,6 +78,11 @@ public class Client {
 //                return false;
             }
         }
+    }
+
+    public void init() {
+        new Thread(new SendThread(dos,input)).start();
+        new Thread(new ReceiveThread(dis)).start();
     }
 
     public void exit() throws IOException {

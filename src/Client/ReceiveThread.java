@@ -1,40 +1,30 @@
 package Client;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class ReceiveThread implements Runnable {
-    private int port;
+    private DataInputStream dis;
 
-    public ReceiveThread(int port) {
-        this.port = port;
+    public ReceiveThread(DataInputStream dis) {
+        this.dis = dis;
     }
 
     @Override
     public void run() {
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket(port);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        byte[] bytes = new byte[1024*60];
-        DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
         while (true) {
             try {
-                socket.receive(packet);
+                String string = dis.readUTF();
+                System.out.println("对方：" + string);
+                if (string.equals("bye")) {
+                    break;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            byte[] data = packet.getData();
-            String string = new String(data, 0, packet.getLength());
-            System.out.println("对方：" + string);
-            if (string.equals("bye")) {
-                break;
-            }
         }
-        socket.close();
     }
 }
