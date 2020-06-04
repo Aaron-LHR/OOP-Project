@@ -23,7 +23,8 @@ public class chatRoom extends JFrame implements ActionListener {
     JLabel lbPort, lbIP, lbName;
     JTextField txtPort, txtIP, txtName;
     JButton btnExt, btnSmt;
-    JTextArea txtMsg, txtTalker;
+    JTextArea txtMsg;
+    JScrollPane txtScroll;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -238,27 +239,20 @@ public class chatRoom extends JFrame implements ActionListener {
             middleBar.setBackground(new Color(255, 255, 255)); // white
             middleBar.setBounds(235,80, 610, 450);
 
-            // 底边栏
-            bottomBar = new JPanel();
-            bottomBar.setBorder(BorderFactory.createTitledBorder(null, "发送", TitledBorder.DEFAULT_JUSTIFICATION,
-                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            bottomBar.setLayout(null);
-            bottomBar.setFont(new Font("宋体", 0, 12));
-            bottomBar.setBackground(new Color(255, 255, 255)); // white
-            bottomBar.setBounds(235,540, 610, 130);
-
             // 对话区
-            txtMsg = new JTextArea(20, 50);
+            txtMsg = new JTextArea(4, 40);
             txtMsg.setLineWrap(true); // 激活自动换行功能
             txtMsg.setWrapStyleWord(true); // 换行不换字
-            txtMsg.setBackground(new Color(211, 211, 211));
-            txtMsg.setFont(new Font("宋体", 0, 12));
-            txtMsg.setEditable(true);
-            txtMsg.setBounds(240, 540, 605,90);
+
+            txtScroll = new JScrollPane(txtMsg);
+            txtScroll.setBorder(BorderFactory.createTitledBorder(null, "发送", TitledBorder.DEFAULT_JUSTIFICATION,
+                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
+            txtScroll.setBounds(235, 540, 610,90);
+            txtScroll.setBackground(new Color(250, 250, 250));
+            txtScroll.setFont(new Font("宋体", 0, 12));
 
             // 发送按钮
             btnSmt = new JButton("发送");
-            // btnSmt.setBorder(BorderFactory.createRaisedBevelBorder());
             btnSmt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -268,17 +262,13 @@ public class chatRoom extends JFrame implements ActionListener {
             btnSmt.setFont(new Font("宋体", 0, 12));
             btnSmt.setBounds(720, 635, 100, 30);
 
-            // 添加至底边栏
-            bottomBar.add(txtMsg);
-            bottomBar.add(btnSmt);
-            bottomBar.add(new JScrollPane(txtMsg));
-
             // 最终添加
-            this.setLayout(null);
-            this.getContentPane().add(topBar);
-            this.getContentPane().add(leftBar);
-            this.getContentPane().add(middleBar);
-            this.getContentPane().add(bottomBar);
+            setLayout(null);
+            add(topBar);
+            add(leftBar);
+            add(middleBar);
+            add(txtScroll);
+            add(btnSmt);
 
             // 设置界面可见
             setVisible(true);
