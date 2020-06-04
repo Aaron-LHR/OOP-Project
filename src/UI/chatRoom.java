@@ -1,5 +1,7 @@
 package UI;
 
+import Client.Client;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -14,6 +16,7 @@ import java.net.Socket;
  */
 
 public class chatRoom extends JFrame implements ActionListener {
+    Client client = new Client("localhost",1111);
 
     // 聊天界面
     JPanel pnlChat, topBar, leftBar, middleBar, bottomBar;
@@ -41,7 +44,7 @@ public class chatRoom extends JFrame implements ActionListener {
     String strSend, strReceive, strKey, strStatus;
     boolean flag = true;
 
-    public chatRoom() {
+    public chatRoom() throws IOException {
 
         // 登录界面
         pnlLgn = new JPanel();
@@ -294,11 +297,35 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
     public void UsrRgst() {
-
+        try {
+            String username = txtUsr.getText().trim();
+            String password = new String(txtPwd.getPassword()).trim();
+            if (client.register(username, password)) {
+                popWindows("注册成功", "注册");
+//                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
+            }
+            else {
+                popWindows("用户名已被占用", "注册");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void UsrLogin() {
-        diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
+        try {
+            String username = txtUsr.getText().trim();
+            String password = new String(txtPwd.getPassword()).trim();
+            if (client.Login(username, password)) {
+                popWindows("登录成功", "登录");
+                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
+            }
+            else {
+                popWindows("用户名或密码错误", "登录");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void submitText() {
@@ -331,7 +358,7 @@ public class chatRoom extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {}
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new chatRoom();
     }
 

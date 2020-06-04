@@ -58,7 +58,7 @@ public class Client {
 //        }
         dos.writeUTF("**" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
-        client.shutdownOutput();
+//        client.shutdownOutput();
         String ret = dis.readUTF();
         if (ret.equals("0")) {
             System.out.println("注册成功");
@@ -90,4 +90,16 @@ public class Client {
 //    public void setPassword(String password) {
 //        this.password = password;
 //    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void send(String ToUsername, String s) throws IOException {
+        dos.writeUTF("@" + username + "@" + ToUsername + "@" + s);
+    }
+
+    public String[] receive() throws IOException {
+        return dis.readUTF().split("@");
+    }
 }
