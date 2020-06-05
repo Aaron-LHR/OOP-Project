@@ -23,8 +23,8 @@ public class chatRoom extends JFrame implements ActionListener {
     JLabel lbPort, lbIP, lbName;
     JTextField txtPort, txtIP, txtName;
     JButton btnExt, btnSmt;
-    JTextArea txtMsg;
-    JScrollPane txtScroll;
+    JTextArea txtMsg, txtRcd;
+    JScrollPane txtScroll, txtScr;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -38,11 +38,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JDialog diaLgnFrame = new JDialog(this, "登录", true);
 
     // 辅助参数
-    Socket skt = null;
-    BufferedReader in = null;
-    PrintWriter out = null;
-
-    String strSend, strReceive, strKey, strStatus;
+    String strName, strPwd;
     boolean flag = true;
 
     public chatRoom() throws IOException {
@@ -170,6 +166,7 @@ public class chatRoom extends JFrame implements ActionListener {
             lbPort.setBounds(10, 30, 50, 12);
 
             txtPort = new JTextField();
+            txtPort.setText("1111");
             txtPort.setBorder(BorderFactory.createEtchedBorder());
             txtPort.setBackground(Color.WHITE);
             txtPort.setFont(new Font("宋体", 0, 12));
@@ -182,6 +179,7 @@ public class chatRoom extends JFrame implements ActionListener {
             lbIP.setBounds(210, 30, 50, 12);
 
             txtIP = new JTextField();
+            txtIP.setText("127.0.0.1");
             txtIP.setBorder(BorderFactory.createEtchedBorder());
             txtIP.setBackground(Color.WHITE);
             txtIP.setFont(new Font("宋体", 0, 12));
@@ -194,6 +192,7 @@ public class chatRoom extends JFrame implements ActionListener {
             lbName.setBounds(420, 30, 50, 12);
 
             txtName = new JTextField(10);
+            txtName.setText(strName);
             txtName.setBorder(BorderFactory.createEtchedBorder());
             txtName.setBackground(Color.WHITE);
             txtName.setFont(new Font("宋体", 0, 12));
@@ -230,16 +229,20 @@ public class chatRoom extends JFrame implements ActionListener {
             leftBar.setBackground(new Color(255, 255, 255)); // white
             leftBar.setBounds(5,80, 225, 590);
 
-            // 中间栏
-            middleBar = new JPanel();
-            middleBar.setBorder(BorderFactory.createTitledBorder(null, "聊天信息", TitledBorder.DEFAULT_JUSTIFICATION,
-                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            middleBar.setLayout(null);
-            middleBar.setFont(new Font("宋体", 0, 12));
-            middleBar.setBackground(new Color(255, 255, 255)); // white
-            middleBar.setBounds(235,80, 610, 450);
+            // 对话框
+            txtRcd = new JTextArea(20, 50);
+            txtRcd.setLineWrap(true); // 激活自动换行功能
+            txtRcd.setWrapStyleWord(true); // 换行不换字
+            txtRcd.setEditable(false);
 
-            // 对话区
+            txtScr = new JScrollPane(txtRcd);
+            txtScr.setBorder(BorderFactory.createTitledBorder(null, "聊天信息", TitledBorder.DEFAULT_JUSTIFICATION,
+                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
+            txtScr.setBounds(235,80, 610, 450);
+            txtScr.setBackground(new Color(255, 255, 255));
+            txtScr.setFont(new Font("宋体", 0, 12));
+
+            // 编辑信息区
             txtMsg = new JTextArea(4, 40);
             txtMsg.setLineWrap(true); // 激活自动换行功能
             txtMsg.setWrapStyleWord(true); // 换行不换字
@@ -257,12 +260,13 @@ public class chatRoom extends JFrame implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        client.send("cdf", txtMsg.getText());
+                        String s = txtMsg.getText();
+                        submitText(s, strName);
+                        client.send("cdf", s);
                         txtMsg.setText("");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-//                    submitText();
                 }
             });
             btnSmt.setFont(new Font("宋体", 0, 12));
@@ -272,7 +276,7 @@ public class chatRoom extends JFrame implements ActionListener {
             setLayout(null);
             add(topBar);
             add(leftBar);
-            add(middleBar);
+            add(txtScr);
             add(txtScroll);
             add(btnSmt);
 
@@ -294,11 +298,13 @@ public class chatRoom extends JFrame implements ActionListener {
 
     public void UsrRgst() {
         try {
+            strName = txtUsr.getText();
+            strPwd = new String(txtPwd.getPassword());
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
             if (client.register(username, password)) {
                 popWindows("注册成功", "注册");
-//                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
+                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
             }
             else {
                 popWindows("用户名已被占用", "注册");
@@ -310,6 +316,8 @@ public class chatRoom extends JFrame implements ActionListener {
 
     public void UsrLogin() {
         try {
+            strName = txtUsr.getText();
+            strPwd = new String(txtPwd.getPassword());
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
             if (client.Login(username, password)) {
@@ -324,8 +332,10 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
-    public void submitText() {
-
+    public void submitText(String s, String name) {
+        txtRcd.setEditable(true);
+        txtRcd.append(name + ":\n    " + s + "\n\n");
+        txtRcd.setEditable(false);
     }
 
     // 弹出提示信息
