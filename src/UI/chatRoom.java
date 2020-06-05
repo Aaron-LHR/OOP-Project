@@ -256,7 +256,13 @@ public class chatRoom extends JFrame implements ActionListener {
             btnSmt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    submitText();
+                    try {
+                        client.send("cdf", txtMsg.getText());
+                        txtMsg.setText("");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+//                    submitText();
                 }
             });
             btnSmt.setFont(new Font("宋体", 0, 12));
