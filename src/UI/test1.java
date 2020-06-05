@@ -1,6 +1,8 @@
 package UI;
 
 import Client.Client;
+import Client.Flag;
+import Client.ReceiveThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -17,6 +19,7 @@ import java.net.Socket;
 
 public class test1 extends JFrame implements ActionListener {
     Client client = new Client("localhost",1111);
+    Flag runFlag = client.getRunFlag();
     String toUsername = "cdf";
 
     // 聊天界面
@@ -43,6 +46,7 @@ public class test1 extends JFrame implements ActionListener {
     boolean flag = true;
 
     public test1() throws IOException {
+        new Thread(new ReceiveThread(client.getDis(), this.runFlag)).start();
 
         // 登录界面
         pnlLgn = new JPanel();
@@ -273,14 +277,17 @@ public class test1 extends JFrame implements ActionListener {
             btnSmt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        String s = txtMsg.getText();
-                        submitText(s, strName);
-                        client.send(toUsername, s);
-                        txtMsg.setText("");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+//                    try {
+//                        String s = txtMsg.getText();
+//                        submitText(s, strName);
+//                        if (!client.send(toUsername, s)) {
+//                            System.out.println("ddd");
+////                            popWindows("对方不在线", "提示");
+//                        }
+//                        txtMsg.setText("");
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    }
                 }
             });
             btnSmt.setFont(new Font("宋体", 0, 12));
@@ -296,7 +303,7 @@ public class test1 extends JFrame implements ActionListener {
 
             // 设置界面可见
             setVisible(true);
-            receive();
+//            receive();
 
         }
 
@@ -338,12 +345,11 @@ public class test1 extends JFrame implements ActionListener {
                 strName = username;
                 strPwd = password;
                 diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
-
             }
             else {
                 popWindows("用户名或密码错误", "登录");
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -356,18 +362,24 @@ public class test1 extends JFrame implements ActionListener {
         }
     }
 
-    private void receive() throws IOException {
-        while (true) {
-            String string = client.receive();
-            String[] output = string.split("@");
-            System.out.println(string);
-            synchronized (txtRcd) {
-                txtRcd.setEditable(true);
-                txtRcd.append(output[1] + ":\n    " + output[2] + "\n\n");
-                txtRcd.setEditable(false);
-            }
-        }
-    }
+//    private void receive() throws IOException {
+//        while (true) {
+//            String string = client.receive();
+//            String[] output = string.split("@");
+//            switch (output[2]) {
+//                case
+//            }
+//            if (output[0].equals("0")) {
+//                synchronized (txtRcd) {
+//                    txtRcd.setEditable(true);
+//                    txtRcd.append(output[1] + ":\n    " + output[2] + "\n\n");
+//                    txtRcd.setEditable(false);
+//                }
+//            }
+////            System.out.println(string);
+//
+//        }
+//    }
 
     // 弹出提示信息
     public void popWindows(String strWarning, String strTitle) {
@@ -400,3 +412,4 @@ public class test1 extends JFrame implements ActionListener {
     }
 
 }
+

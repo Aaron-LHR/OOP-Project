@@ -3,8 +3,10 @@ package Client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.regex.Pattern;
 
 public class Client {
+    private Flag runFlag = new Flag();
     private String username;
 //    private String password;
     BufferedReader input;
@@ -23,58 +25,47 @@ public class Client {
         dis = new DataInputStream(client.getInputStream());
     }
 
-    public boolean Login(String username_tmp, String password_tmp) throws IOException {
-//        System.out.println("请输入用户名：");
-//        username_tmp = input.readLine();
-//        System.out.println("请输入密码：");
-//        password_tmp = input.readLine();
+    public boolean Login(String username_tmp, String password_tmp) throws IOException, InterruptedException {
         dos.writeUTF("!!" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
-//            client.shutdownOutput();
-        String ret = dis.readUTF();
-        if (ret.equals("0")) {
-            System.out.println("登录成功");
-            username = username_tmp;
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                wait();
+            }
+            if (runFlag.login == 0) {
+                System.out.println("登录成功");
+                username = username_tmp;
 //            password = password_tmp;
-            return true;
-        }
-        else{
-            System.out.println("登录失败，请重试");
-            return false;
+                runFlag.modify = false;
+                return true;
+            }
+            else{
+                System.out.println("登录失败，请重试");
+                runFlag.modify = false;
+                return false;
+            }
         }
     }
 
-    public boolean register(String username_tmp, String password_tmp) throws IOException {
-//        System.out.println("请输入用户名：");
-//        username_tmp = input.readLine();
-//        System.out.println("请输入密码：");
-//        password_tmp = input.readLine();
-//        System.out.println("请确认密码：");
-//        if (input.readLine().equals(password)) {
-//            break;
-//        }
-//        else {
-//            System.out.println("两次密码不一致，请重新输入");
-//        }
+    public boolean register(String username_tmp, String password_tmp) throws IOException, InterruptedException {
         dos.writeUTF("**" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
-//        client.shutdownOutput();
-        String ret = dis.readUTF();
-        if (ret.equals("0")) {
-            System.out.println("注册成功");
-            return true;
-        }
-        else {
-            System.out.println("注册失败");
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                wait();
+            }
+            if (runFlag.register == 0) {
+                System.out.println("注册成功");
+                runFlag.modify = false;
+                return true;
+            }
+            else{
+                System.out.println("注册失败，请重试");
+                runFlag.modify = false;
                 return false;
+            }
         }
-
     }
-
-//    public void init() {
-//        new Thread(new SendThread(dos, this.username)).start();
-//        new Thread(new ReceiveThread(dis)).start();
-//    }
 
     public void exit() throws IOException {
         dos.writeUTF("--" + username);
@@ -82,6 +73,10 @@ public class Client {
         dos.close();
         dis.close();
         client.close();
+    }
+
+    public Flag getRunFlag() {
+        return runFlag;
     }
 
     public void setUsername(String username) {
@@ -109,6 +104,11 @@ public class Client {
     }
 
     public String receive() throws IOException {
+//        String ret = dis.readUTF();
+//        if (Pattern.matches("@*@*@", ret))
+//        return "0" + ret;   //返回消息
+//        else if ()
+//        return "";
         return dis.readUTF();
     }
 }

@@ -78,7 +78,7 @@ public class Login {
                     String username = userText.getText().trim();
                     String password = new String(passwordText.getPassword()).trim();
                     client.Login(username, password);
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
