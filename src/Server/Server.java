@@ -7,12 +7,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Server {
     public static int port=1111;
+    public static char chgl='\n';//部署至服务器时更改
     public static Map<String,String> account=new HashMap<>(){};//name,password
     public static Map<String,Socket> online=new HashMap<>();//online user
+    public static Map<String, ReentrantReadWriteLock> groupLock=new HashMap<>();//每个群聊有一个锁
+    private final ReentrantReadWriteLock readWriteLock =new ReentrantReadWriteLock();
     private Server(){}
+
     public static void main(String[] args) {
         init();
         try {
