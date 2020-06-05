@@ -14,14 +14,20 @@ public class Control extends Thread{
     @Override
     public void run() {
         super.run();
-        while (true){
+        while (socket.isConnected()){
             try {
                 InputStream inputStream=socket.getInputStream();
                 OutputStream outputStream=socket.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outputStream);
                 DataInputStream in = new DataInputStream(inputStream);
+                String buff=null;
+                try {
+                    buff= in.readUTF();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return;
+                }
 
-                String buff = in.readUTF();
                 System.out.println("Control receive:"+buff);
 
                 if (buff.charAt(0)=='*'&&buff.charAt(1)=='*'){//注册:**name##passwd##
@@ -78,6 +84,18 @@ public class Control extends Thread{
                     String[] tmp=buff.split("##");
                     new AddGroup(tmp,socket).start();
                 }
+
+                if (buff.indexOf("##GROUPON##")==0){//激活群聊：##GROUPON##群名+群主
+                    String t=in.readUTF();
+                    String name=buff.substring(11);
+                    GroupShow gs=new GroupShow(name,socket);//只负责展示群信息
+                    gs.start();
+                }
+                if (buff.indexOf("##GROUPCHAT##")==0){
+                    new GroupChat(buff,socket).start();
+                }
+
+
             }catch (Exception e){
                 e.printStackTrace();
             }

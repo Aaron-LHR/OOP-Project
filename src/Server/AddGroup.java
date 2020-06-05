@@ -2,9 +2,10 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class AddGroup extends Thread{
-    public String[] member;
+    public String[] member;//groupname,name1,name2,name3
     public Socket socket;
     public AddGroup(String[] member,Socket socket){
         this.member=member;
@@ -19,6 +20,7 @@ public class AddGroup extends Thread{
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         StringBuffer sum=new StringBuffer();
 
@@ -29,6 +31,7 @@ public class AddGroup extends Thread{
         if (!groupfile.exists()){
             try {
                 groupfile.createNewFile();
+                Server.groupLock.put(member[0]+member[1],new ReentrantReadWriteLock());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,6 +52,8 @@ public class AddGroup extends Thread{
                 osw.write(member[i]+" ");
             }
             osw.close();
+            out.writeUTF("0");
+            System.out.println("群聊初始化完成");
         } catch (Exception e) {
             e.printStackTrace();
         }

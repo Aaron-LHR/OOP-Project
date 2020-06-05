@@ -19,11 +19,11 @@ public class Send extends Thread {//@fromUser@content
     @Override
     public void run() {
         super.run();
-
         try {
             DataOutputStream out=new DataOutputStream(socket.getOutputStream());
             DataInputStream in=new DataInputStream(socket.getInputStream());
             if (Server.online.get(toUser)==null){
+                System.out.println(toUser+"未上线");
                 out.writeUTF("1");
                 out.flush();
             }
@@ -32,7 +32,7 @@ public class Send extends Thread {//@fromUser@content
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
                 String msg="@"+fromUser+"@"+content;
                 sout.writeUTF(msg);
-                System.out.println("发送:"+msg);
+                System.out.println("发送至"+toUser+":"+msg);
                 sout.flush();
                 out.writeUTF("0");
                 out.flush();
