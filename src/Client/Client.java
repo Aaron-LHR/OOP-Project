@@ -71,12 +71,13 @@ public class Client {
 
     }
 
-    public void init() {
-        new Thread(new SendThread(dos, this.username)).start();
-        new Thread(new ReceiveThread(dis)).start();
-    }
+//    public void init() {
+//        new Thread(new SendThread(dos, this.username)).start();
+//        new Thread(new ReceiveThread(dis)).start();
+//    }
 
     public void exit() throws IOException {
+        dos.writeUTF("--" + username);
         input.close();
         dos.close();
         dis.close();
@@ -95,11 +96,19 @@ public class Client {
         return username;
     }
 
+    public DataOutputStream getDos() {
+        return dos;
+    }
+
+    public DataInputStream getDis() {
+        return dis;
+    }
+
     public void send(String ToUsername, String s) throws IOException {
         dos.writeUTF("@" + username + "@" + ToUsername + "@" + s);
     }
 
-    public String[] receive() throws IOException {
-        return dis.readUTF().split("@");
+    public String receive() throws IOException {
+        return dis.readUTF();
     }
 }

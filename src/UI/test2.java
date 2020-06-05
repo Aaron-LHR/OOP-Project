@@ -15,9 +15,9 @@ import java.net.Socket;
 ，但在差不多的 JPanel topBar 中添加的控件都正常显示
  */
 
-public class chatRoom extends JFrame implements ActionListener {
+public class test2 extends JFrame implements ActionListener {
     Client client = new Client("localhost",1111);
-    String toUsername = "cdf";
+    String toUsername = "abc";
 
     // 聊天界面
     JPanel pnlChat, topBar, leftBar, middleBar, bottomBar;
@@ -27,7 +27,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JTextArea txtMsg, txtRcd;
     JScrollPane txtScroll, txtScr;
 
-    JFrame chatRoomFrame = new JFrame("Java聊天室");
+    JFrame test2Frame = new JFrame("Java聊天室");
 
     // 登录界面
     JPanel pnlLgn;
@@ -42,7 +42,7 @@ public class chatRoom extends JFrame implements ActionListener {
     String strName, strPwd;
     boolean flag = true;
 
-    public chatRoom() throws IOException {
+    public test2() throws IOException {
 
         // 登录界面
         pnlLgn = new JPanel();
@@ -396,7 +396,7 @@ public class chatRoom extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {}
 
     public static void main(String[] args) throws IOException {
-        new chatRoom();
+        new test2();
     }
 
 }

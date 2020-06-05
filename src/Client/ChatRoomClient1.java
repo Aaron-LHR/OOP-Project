@@ -28,8 +28,8 @@ public class ChatRoomClient1 extends JFrame {
      * Launch the application.
      */
     public void accept() throws Exception{
-        String[] ret = client.receive();
-        textArea.append(ret[1] + ":" + ret[2] + "\n");
+//        String[] ret = client.receive();
+//        textArea.append(ret[1] + ":" + ret[2] + "\n");
     }
     public void send(String str) throws Exception{
 
