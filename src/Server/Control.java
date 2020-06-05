@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Map;
 
 public class Control extends Thread{
     Socket socket;
@@ -69,6 +70,7 @@ public class Control extends Thread{
                     tmp=tmp.substring(2);
                     if (Server.online.get(tmp)==null){
                         //用户已下线，注销错误
+                        System.out.println("用户已下线，注销错误");
                         out.writeUTF("1");
                         out.flush();
                     }
@@ -86,7 +88,6 @@ public class Control extends Thread{
                 }
 
                 if (buff.indexOf("##GROUPON##")==0){//激活群聊：##GROUPON##群名+群主
-                    String t=in.readUTF();
                     String name=buff.substring(11);
                     GroupShow gs=new GroupShow(name,socket);//只负责展示群信息
                     gs.start();
@@ -95,6 +96,13 @@ public class Control extends Thread{
                     new GroupChat(buff,socket).start();
                 }
 
+                if (buff.indexOf("##LIST")==0){//在线列表：##LIST
+                    int t=Server.online.size();
+                    out.writeUTF(Integer.toString(t));
+                    for (String i:Server.online.keySet()){
+                        out.writeUTF(i);
+                    }
+                }
 
             }catch (Exception e){
                 e.printStackTrace();
