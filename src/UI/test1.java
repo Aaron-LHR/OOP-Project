@@ -277,17 +277,18 @@ public class test1 extends JFrame implements ActionListener {
             btnSmt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-//                    try {
-//                        String s = txtMsg.getText();
-//                        submitText(s, strName);
-//                        if (!client.send(toUsername, s)) {
-//                            System.out.println("ddd");
-////                            popWindows("对方不在线", "提示");
-//                        }
-//                        txtMsg.setText("");
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
+                    try {
+                        String s = txtMsg.getText();
+                        if (!client.send(toUsername, s)) {
+                            popWindows("对方不在线", "提示");
+                        }
+                        else {
+                            submitText(s, strName);
+                            txtMsg.setText("");
+                        }
+                    } catch (IOException | InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             btnSmt.setFont(new Font("宋体", 0, 12));
@@ -331,7 +332,7 @@ public class test1 extends JFrame implements ActionListener {
             else {
                 popWindows("用户名已被占用", "注册");
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

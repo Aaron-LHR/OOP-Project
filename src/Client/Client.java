@@ -99,8 +99,19 @@ public class Client {
         return dis;
     }
 
-    public void send(String ToUsername, String s) throws IOException {
+    public boolean send(String ToUsername, String s) throws IOException, InterruptedException {
         dos.writeUTF("@" + username + "@" + ToUsername + "@" + s);
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                wait();
+            }
+            if (runFlag.sendPrivateMessage == 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     public String receive() throws IOException {
