@@ -48,12 +48,12 @@ public class Control extends Thread{
                     tmp=tmp.substring(2);
                     if (Server.online.get(tmp)!=null){
                         //用户在线，返回0
-                        out.writeUTF("0");
+                        out.writeUTF("@"+tmp+"@100@0");
                         out.flush();
                     }
                     else {
                         //不在线，返回1
-                        out.writeUTF("1");
+                        out.writeUTF("@"+tmp+"@100@1");
                         out.flush();
                     }
                 }
@@ -71,12 +71,12 @@ public class Control extends Thread{
                     if (Server.online.get(tmp)==null){
                         //用户已下线，注销错误
                         System.out.println("用户已下线，注销错误");
-                        out.writeUTF("1");
+                        out.writeUTF("@name@2@1");
                         out.flush();
                     }
                     else {
                         //完成注销
-                        out.writeUTF("0");
+                        out.writeUTF("@name@2@0");
                         out.flush();
                     }
                 }
@@ -98,7 +98,7 @@ public class Control extends Thread{
 
                 if (buff.indexOf("##LIST")==0){//在线列表：##LIST
                     int t=Server.online.size();
-                    out.writeUTF(Integer.toString(t));
+                    out.writeUTF("@"+t+"@105@0");
                     for (String i:Server.online.keySet()){
                         out.writeUTF(i);
                     }
