@@ -129,10 +129,12 @@ public class Client {
 
     public String[] getOnlineList() throws IOException, InterruptedException {
         dos.writeUTF("##LIST");
-        while (!runFlag.modify) {
-            runFlag.wait();
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            return runFlag.getOnlineList();
         }
-        return runFlag.getOnlineList();
     }
 
     public String receive() throws IOException {
