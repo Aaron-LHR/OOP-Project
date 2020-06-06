@@ -38,7 +38,7 @@ public class AddGroup extends Thread{
         }
         else {
             try {
-                out.writeUTF("1");
+                out.writeUTF("@"+member[0]+member[1]+"@102@1");
                 out.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -52,7 +52,7 @@ public class AddGroup extends Thread{
                 osw.write(member[i]+" ");
             }
             osw.close();
-            out.writeUTF("0");
+            out.writeUTF("@"+member[0]+member[1]+"@102@0");
             System.out.println("群聊初始化完成");
         } catch (Exception e) {
             e.printStackTrace();

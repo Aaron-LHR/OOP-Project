@@ -31,7 +31,7 @@ public class GroupShow extends Thread{
             }
 
             Server.groupLock.get(name).readLock().unlock();
-            out.writeUTF(Integer.toString(s.size()));
+            out.writeUTF("@"+s.size()+"@103@0");
             for (String i:s){
                 out.writeUTF(i);
             }

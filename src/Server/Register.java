@@ -21,12 +21,15 @@ public class Register extends Thread{
             if (Server.account.get(username)!=null){
                 //表中有重复用户名
                 Server.account.put(username,passwd);
-                out.writeUTF("1");
+                out.writeUTF("@name@1@1");
             }
-            writer.write("\n"+username+" "+passwd);
-            writer.close();
-            out.writeUTF("0");
-            out.flush();
+            else{
+                writer.write("\n"+username+" "+passwd);
+                writer.close();
+                out.writeUTF("@name@1@0");
+                out.flush();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
