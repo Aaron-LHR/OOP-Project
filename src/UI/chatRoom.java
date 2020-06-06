@@ -22,6 +22,19 @@ import java.util.Date;
 public class chatRoom extends JFrame implements ActionListener {
     Client client = Client.getInstance();
     Flag runFlag = Flag.getInstance();
+    private static chatRoom chatRoom;
+
+    static {
+        try {
+            chatRoom = new chatRoom();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static chatRoom getInstance() {
+        return chatRoom;
+    }
     String toUsername = "cdf";
 
     // 聊天界面
@@ -47,7 +60,7 @@ public class chatRoom extends JFrame implements ActionListener {
     String strName, strPwd;
     boolean flag = true;
 
-    public chatRoom() throws IOException {
+    private chatRoom() throws IOException {
         new Thread(new ReceiveThread(client.getDis(), this.runFlag)).start();
 
         // 登录界面
@@ -412,7 +425,7 @@ public class chatRoom extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {}
 
     public static void main(String[] args) throws IOException {
-        new chatRoom();
+
     }
 
 }
