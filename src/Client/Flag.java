@@ -12,4 +12,5 @@ public class Flag {
     int sendGroupMessage;
     int onlineListFlag;
     String[] onlineList;
+
 }

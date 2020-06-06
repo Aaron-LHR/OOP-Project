@@ -30,7 +30,7 @@ public class Client {
         dos.flush();
         synchronized (runFlag) {
             while (!runFlag.modify) {
-                wait();
+                runFlag.wait();
             }
             if (runFlag.login == 0) {
                 System.out.println("登录成功");
@@ -52,7 +52,7 @@ public class Client {
         dos.flush();
         synchronized (runFlag) {
             while (!runFlag.modify) {
-                wait();
+                runFlag.wait();
             }
             if (runFlag.register == 0) {
                 System.out.println("注册成功");
@@ -103,7 +103,7 @@ public class Client {
         dos.writeUTF("@" + username + "@" + ToUsername + "@" + s);
         synchronized (runFlag) {
             while (!runFlag.modify) {
-                wait();
+                runFlag.wait();
             }
             if (runFlag.sendPrivateMessage == 0) {
                 return true;

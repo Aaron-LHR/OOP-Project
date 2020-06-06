@@ -101,7 +101,7 @@ public class ReceiveThread implements Runnable {
                         case "200":
 
                     }
-                    notify();
+                    flag.notify();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
