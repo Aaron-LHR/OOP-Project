@@ -18,13 +18,13 @@ public class FontAttrib {
 
     public FontAttrib() {}
 
-    public FontAttrib(String s) {
-        setText(s);
-        setName("宋体");
-        setStyle(0);
-        setSize(12);
-        setColor(Color.BLACK);
-        setBackColor(Color.WHITE);
+    public FontAttrib(String msg, String name, int style, int size, Color color, Color backCol) {
+        setText(msg);
+        setName(name);
+        setStyle(style);
+        setSize(size);
+        setColor(color);
+        setBackColor(backCol);
     }
 
     public SimpleAttributeSet getAttrSet() {
