@@ -1,15 +1,18 @@
 package Client;
 
+import UI.chatRoom;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
 public class ReceiveThread implements Runnable {
     private DataInputStream dis;
-    Flag flag;
+    chatRoom chatRoom;
+    Flag flag = Flag.getInstance();
 
-    public ReceiveThread(DataInputStream dis, Flag flag) {
+    public ReceiveThread(DataInputStream dis, chatRoom chatRoom) {
         this.dis = dis;
-        this.flag = flag;
+        this.chatRoom = chatRoom;
     }
 
     @Override
@@ -99,7 +102,9 @@ public class ReceiveThread implements Runnable {
                             }
                             break;
                         case "200":
-
+                            if (output[1].equals(flag.curToUsername)) {
+                                chatRoom.submitText(output[3], output[1]);
+                            }
                     }
                     flag.notify();
                 }
