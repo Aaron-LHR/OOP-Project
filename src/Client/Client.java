@@ -6,23 +6,36 @@ import java.net.Socket;
 import java.util.regex.Pattern;
 
 public class Client {
-    private Flag runFlag = new Flag();
+    private Flag runFlag = Flag.getInstance();
     private String username;
 //    private String password;
     BufferedReader input;
     private String IP;
     private int port;
-    private Socket client;
+    private Socket socket;
     private DataOutputStream dos;
     private DataInputStream dis;
 
-    public Client(String IP, int port) throws IOException {
+    private static Client client;
 
+    static {
+        try {
+            client = new Client("localhost",1111);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Client getInstance() {
+        return client;
+    }
+
+    private Client(String IP, int port) throws IOException {
         this.IP = IP;
         this.port = port;
-        client = new Socket(IP,port);
-        dos = new DataOutputStream(client.getOutputStream());
-        dis = new DataInputStream(client.getInputStream());
+        socket = new Socket(IP,port);
+        dos = new DataOutputStream(socket.getOutputStream());
+        dis = new DataInputStream(socket.getInputStream());
     }
 
     public boolean Login(String username_tmp, String password_tmp) throws IOException, InterruptedException {
@@ -72,7 +85,7 @@ public class Client {
         input.close();
         dos.close();
         dis.close();
-        client.close();
+        socket.close();
     }
 
     public Flag getRunFlag() {

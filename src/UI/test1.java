@@ -20,8 +20,8 @@ import java.util.Date;
  */
 
 public class test1 extends JFrame implements ActionListener {
-    Client client = new Client("localhost",1111);
-    Flag runFlag = client.getRunFlag();
+    Client client = Client.getInstance();
+    Flag runFlag = Flag.getInstance();
     String toUsername = "cdf";
 
     // 聊天界面
