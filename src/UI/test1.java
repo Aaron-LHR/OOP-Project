@@ -11,6 +11,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /*
 目前还有一个小 bug 搞不定：我在 JPanel bottomBar 中添加的控件无法显示
@@ -357,8 +359,9 @@ public class test1 extends JFrame implements ActionListener {
 
     public void submitText(String s, String name) {
         synchronized (txtRcd) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
             txtRcd.setEditable(true);
-            txtRcd.append(name + ":\n    " + s + "\n\n");
+            txtRcd.append(df.format(new Date()) + name + ":\n" + s + "\n\n");
             txtRcd.setEditable(false);
         }
     }
