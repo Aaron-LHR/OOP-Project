@@ -158,12 +158,14 @@ public class chatRoom extends JFrame implements ActionListener {
 
         if (flag) {
 
-            // 使用Windows的界面风格
+            /* 使用Windows的界面风格
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+             */
 
             // 聊天室界面
             this.setSize(850, 700);
@@ -265,6 +267,7 @@ public class chatRoom extends JFrame implements ActionListener {
             leftBar.setBounds(5,80, 165, 590);
 
              */
+
 
             // 在线用户列表
             onlineList = new JList();
