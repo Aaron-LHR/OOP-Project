@@ -6,6 +6,8 @@ import Client.ReceiveThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -14,10 +16,6 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*
-目前还有一个小 bug 搞不定：我在 JPanel bottomBar 中添加的控件无法显示
-，但在差不多的 JPanel topBar 中添加的控件都正常显示
- */
 
 public class chatRoom extends JFrame implements ActionListener {
     Client client = Client.getInstance();
@@ -38,12 +36,15 @@ public class chatRoom extends JFrame implements ActionListener {
     String toUsername = "cdf";
 
     // 聊天界面
-    JPanel pnlChat, topBar, leftBar, middleBar, bottomBar;
-    JLabel lbPort, lbIP, lbName;
+    JPanel topBar, leftBar;
+    JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt;
-    JTextArea txtMsg, txtRcd;
+    JButton btnExt, btnSmt, btnRmv;
+    JTextArea txtMsg;
+    JTextPane txtRcd;
+    StyledDocument doc;
     JScrollPane txtScroll, txtScr;
+    JComboBox fontName, fontSize, fontStyle, fontColor, fontBackColor;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -59,6 +60,11 @@ public class chatRoom extends JFrame implements ActionListener {
     // 辅助参数
     String strName, strPwd;
     boolean flag = true;
+    String[] str_Name = { "宋体", "黑体", "Dialog", "Gulim" };
+    String[] str_Size = { "12", "14", "18", "22", "30", "40" };
+    String[] str_Style = { "常规", "斜体", "粗体", "粗斜体" };
+    String[] str_Color = { "黑色", "红色", "蓝色", "黄色", "绿色" };
+    String[] str_BackColor = { "无色", "灰色", "淡红", "淡蓝", "淡黄", "淡绿" };
 
     private chatRoom() throws IOException {
         new Thread(new ReceiveThread(client.getDis(), this.runFlag)).start();
@@ -158,9 +164,16 @@ public class chatRoom extends JFrame implements ActionListener {
         diaLgnFrame.setLocation((screen.width - frame.width) / 2, (screen.height - frame.height) / 2);
         diaLgnFrame.getContentPane().setBackground(Color.gray);
         diaLgnFrame.setVisible(true);
-
+        diaLgnFrame.getRootPane().setDefaultButton(btnLgn); // 默认回车按钮
 
         if (flag) {
+
+            // 使用Windows的界面风格
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // 聊天室界面
             this.setSize(850, 700);
@@ -259,33 +272,60 @@ public class chatRoom extends JFrame implements ActionListener {
             leftBar.setLayout(null);
             leftBar.setFont(new Font("宋体", 0, 12));
             leftBar.setBackground(new Color(255, 255, 255)); // white
-            leftBar.setBounds(5,80, 225, 590);
+            leftBar.setBounds(5,80, 165, 590);
 
             // 对话框
-            txtRcd = new JTextArea(20, 50);
-            txtRcd.setLineWrap(true); // 激活自动换行功能
-            txtRcd.setWrapStyleWord(true); // 换行不换字
+            txtRcd = new JTextPane();
             txtRcd.setEditable(false);
-
+            doc = txtRcd.getStyledDocument();
 
             txtScr = new JScrollPane(txtRcd);
             txtScr.setBorder(BorderFactory.createTitledBorder(null, "聊天信息", TitledBorder.DEFAULT_JUSTIFICATION,
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            txtScr.setBounds(235,80, 610, 450);
+            txtScr.setBounds(175,80, 670, 415);
             txtScr.setBackground(new Color(255, 255, 255));
             txtScr.setFont(new Font("宋体", 0, 12));
 
-            // 编辑信息区
-            txtMsg = new JTextArea(4, 40);
-            txtMsg.setLineWrap(true); // 激活自动换行功能
-            txtMsg.setWrapStyleWord(true); // 换行不换字
+            // 字体设置
+            fname = new JLabel("字体");
+            fname.setFont(new Font("宋体", 0, 14));
+            fname.setBounds(175, 500, 35, 30);
 
-            txtScroll = new JScrollPane(txtMsg);
-            txtScroll.setBorder(BorderFactory.createTitledBorder(null, "发送", TitledBorder.DEFAULT_JUSTIFICATION,
-                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            txtScroll.setBounds(235, 540, 610,90);
-            txtScroll.setBackground(new Color(250, 250, 250));
-            txtScroll.setFont(new Font("宋体", 0, 12));
+            fontName = new JComboBox(str_Name); // 字体名称
+            fontName.setFont(new Font("宋体", 0, 12));
+            fontName.setBounds(215, 500, 90, 30);
+
+            fsize = new JLabel("大小");
+            fsize.setFont(new Font("宋体", 0, 14));
+            fsize.setBounds(310, 500, 35, 30);
+
+            fontSize = new JComboBox(str_Size); // 字号
+            fontSize.setFont(new Font("宋体", 0, 12));
+            fontSize.setBounds(350, 500, 90, 30);
+
+            fstyle = new JLabel("样式");
+            fstyle.setFont(new Font("宋体", 0, 14));
+            fstyle.setBounds(445, 500, 35, 30);
+
+            fontStyle = new JComboBox(str_Style); // 样式
+            fontStyle.setFont(new Font("宋体", 0, 12));
+            fontStyle.setBounds(485, 500, 90, 30);
+
+            fcolor = new JLabel("颜色");
+            fcolor.setFont(new Font("宋体", 0, 14));
+            fcolor.setBounds(580, 500, 35, 30);
+
+            fontColor = new JComboBox(str_Color); // 颜色
+            fontColor.setFont(new Font("宋体", 0, 12));
+            fontColor.setBounds(620, 500, 90, 30);
+
+            fbackcol = new JLabel("背景色");
+            fbackcol.setFont(new Font("宋体", 0, 14));
+            fbackcol.setBounds(175, 535, 50, 30);
+
+            fontBackColor = new JComboBox(str_BackColor); // 背景颜色
+            fontBackColor.setFont(new Font("宋体", 0, 12));
+            fontBackColor.setBounds(230, 535, 75, 30);
 
             // 发送按钮
             btnSmt = new JButton("发送");
@@ -298,7 +338,7 @@ public class chatRoom extends JFrame implements ActionListener {
                             popWindows("对方不在线", "提示");
                         }
                         else {
-                            submitText(s, strName);
+                            submitText(getFontAttrib(), strName);
                             txtMsg.setText("");
                         }
                     } catch (IOException | InterruptedException ex) {
@@ -307,27 +347,67 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnSmt.setFont(new Font("宋体", 0, 12));
-            btnSmt.setBounds(720, 635, 100, 30);
+            btnSmt.setBounds(765, 535, 80, 30);
+
+            // 清除已编辑信息
+            btnRmv = new JButton("清空");
+            btnRmv.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    txtMsg.setText("");
+                }
+            });
+            btnRmv.setFont(new Font("宋体", 0, 12));
+            btnRmv.setBounds(680, 535, 80, 30);
+
+            // 编辑信息区
+            txtMsg = new JTextArea();
+            txtMsg.setLineWrap(true); // 激活自动换行功能
+            txtMsg.setWrapStyleWord(true); // 换行不换字
+
+            txtScroll = new JScrollPane(txtMsg);
+            txtScroll.setBorder(BorderFactory.createTitledBorder(null, "发送", TitledBorder.DEFAULT_JUSTIFICATION,
+                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
+            txtScroll.setBounds(175, 570, 670,100);
+            txtScroll.setBackground(new Color(250, 250, 250));
+            txtScroll.setFont(new Font("宋体", 0, 12));
 
             // 最终添加
             setLayout(null);
+
             add(topBar);
             add(leftBar);
+
             add(txtScr);
+
+            add(fname);
+            add(fontName);
+            add(fsize);
+            add(fontSize);
+            add(fstyle);
+            add(fontStyle);
+            add(fcolor);
+            add(fontColor);
+            add(fbackcol);
+            add(fontBackColor);
+
             add(txtScroll);
+
+            add(btnRmv);
             add(btnSmt);
+            getRootPane().setDefaultButton(btnSmt); // 默认回车按钮
 
             // 设置界面可见
             setVisible(true);
-//            receive();
+            // receive();
 
         }
 
     }
 
     public void closeChatFrame() throws IOException {
-        client.exit();
         this.dispose();
+        client.exit();
     }
 
     public void closeDiaLgnFrame() throws IOException {
@@ -370,33 +450,107 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
-    public void submitText(String s, String name) {
+    public void submitText(FontAttrib attrib, String name) {
         synchronized (txtRcd) {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-            txtRcd.setEditable(true);
-            txtRcd.append(df.format(new Date()) + name + ":\n" + s + "\n\n");
-            txtRcd.setEditable(false);
+            try { // 插入文本
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+
+                String s1 = df.format(new Date()) + "  " + name + "\n";
+                String s2 = attrib.getText() + "\n\n";
+
+                FontAttrib attrib1 = new FontAttrib(s1);
+
+                doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
+                doc.insertString(doc.getLength(), s2, attrib.getAttrSet());
+
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
-//    private void receive() throws IOException {
-//        while (true) {
-//            String string = client.receive();
-//            String[] output = string.split("@");
-//            switch (output[2]) {
-//                case
-//            }
-//            if (output[0].equals("0")) {
-//                synchronized (txtRcd) {
-//                    txtRcd.setEditable(true);
-//                    txtRcd.append(output[1] + ":\n    " + output[2] + "\n\n");
-//                    txtRcd.setEditable(false);
-//                }
-//            }
-////            System.out.println(string);
-//
-//        }
-//    }
+    public FontAttrib getFontAttrib() {
+        FontAttrib att = new FontAttrib();
+
+        att.setText(txtMsg.getText());
+        att.setName((String) fontName.getSelectedItem());
+        att.setSize(Integer.parseInt((String) fontSize.getSelectedItem()));
+
+        String temp_style = (String) fontStyle.getSelectedItem();
+        if (temp_style.equals("常规")) {
+            att.setStyle(FontAttrib.GENERAL);
+        }
+        else if (temp_style.equals("粗体")) {
+            att.setStyle(FontAttrib.BOLD);
+        }
+        else if (temp_style.equals("斜体")) {
+            att.setStyle(FontAttrib.ITALIC);
+        }
+        else if (temp_style.equals("粗斜体")) {
+            att.setStyle(FontAttrib.BOLD_ITALIC);
+        }
+
+        String temp_color = (String) fontColor.getSelectedItem();
+        if (temp_color.equals("黑色")) {
+            att.setColor(new Color(0, 0, 0));
+        }
+        else if (temp_color.equals("红色")) {
+            att.setColor(new Color(255, 0, 0));
+        }
+        else if (temp_color.equals("蓝色")) {
+            att.setColor(new Color(0, 0, 255));
+        }
+        else if (temp_color.equals("黄色")) {
+            att.setColor(new Color(255, 255, 0));
+        }
+        else if (temp_color.equals("绿色")) {
+            att.setColor(new Color(0, 255, 0));
+        }
+
+        String temp_backColor = (String) fontBackColor.getSelectedItem();
+        if (!temp_backColor.equals("无色")) {
+            if (temp_backColor.equals("灰色")) {
+                att.setBackColor(new Color(200, 200, 200));
+            }
+            else if (temp_backColor.equals("淡红")) {
+                att.setBackColor(new Color(255, 200, 200));
+            }
+            else if (temp_backColor.equals("淡蓝")) {
+                att.setBackColor(new Color(200, 200, 255));
+            }
+            else if (temp_backColor.equals("淡黄")) {
+                att.setBackColor(new Color(255, 255, 200));
+            }
+            else if (temp_backColor.equals("淡绿")) {
+                att.setBackColor(new Color(200, 255, 200));
+            }
+        }
+
+        return att;
+    }
+
+    /*
+    private void receive() throws IOException {
+        while (true) {
+            String string = client.receive();
+            String[] output = string.split("@");
+            switch (output[2]) {
+                case
+            }
+            if (output[0].equals("0")) {
+                synchronized (txtRcd) {
+                    txtRcd.setEditable(true);
+                    txtRcd.append(output[1] + ":\n    " + output[2] + "\n\n");
+                    txtRcd.setEditable(false);
+                }
+            }
+            System.out.println(string);
+
+        }
+    }
+
+     */
 
     // 弹出提示信息
     public void popWindows(String strWarning, String strTitle) {
