@@ -82,10 +82,19 @@ public class Client {
         }
     }
 
-    public static void saveRecord(String localUsername, String toUsername, String content, String font) throws IOException {
+    public static void saveRecord(String localUsername, String toUsername, String content, String font, boolean direction) throws IOException { //direction==true:send   direction==false:receive
         FileOutputStream fileOutputStream = new FileOutputStream(localUsername + "##" + toUsername + "##Record", true);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-        outputStreamWriter.write(content + "@" + font + "\n", 0, content.length());
+        String s;
+        if (direction) {
+            s = localUsername + "@" + content + "@" + font + "\n";
+        }
+        else {
+            s = toUsername + "@" + content + "@" + font + "\n";
+        }
+        outputStreamWriter.write(s, 0, s.length());
+        outputStreamWriter.flush();
+        outputStreamWriter.close();
     }
 
     public static List<String> readRecord(String localUsername, String toUsername) throws IOException {
@@ -103,6 +112,7 @@ public class Client {
                 line[i++] = (char) c;
             }
         }
+        inputStreamReader.close();
         return list;
     }
 
@@ -158,7 +168,7 @@ public class Client {
                 runFlag.wait();
             }
             if (runFlag.sendPrivateMessage == 0) {
-                saveRecord(username, ToUsername, s, font);
+                saveRecord(username, ToUsername, s, font, true);
                 return true;
             }
             else {

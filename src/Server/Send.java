@@ -39,7 +39,6 @@ public class Send extends Thread {//@fromUser@content
                 out.writeUTF("@"+toUser+"@101@0");
                 out.flush();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

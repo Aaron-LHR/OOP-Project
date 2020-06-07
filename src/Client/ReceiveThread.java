@@ -106,7 +106,7 @@ public class ReceiveThread implements Runnable {
                                 String[] font = output[4].split("#");
                                 chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
                             }
-                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4]);
+                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
                     }
                     flag.notify();
                 }

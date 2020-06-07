@@ -319,8 +319,26 @@ public class chatRoom extends JFrame implements ActionListener {
                         if (i != cl.size() - 1) s += (cl.get(i) + "、");
                         else s += cl.get(i);
                     }
-                    popWindows(s + "参与会话", "会话邀请");
-                    toUsername = cl.get(1);
+                    if (cl.size() == 1 && !toUsername.equals(cl.get(0))) {
+                        popWindows(s + "私聊", "会话邀请");
+                        toUsername = cl.get(0);
+                        synchronized (runFlag) {
+                            runFlag.setCurToUsername(toUsername);
+                        }
+                        txtMsg.setText("");
+                        try {
+                            for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
+                                String[] MessageSplit = loadMessage.split("@");
+                                String[] fontSplit = MessageSplit[2].split("#");
+                                infoTransfer(MessageSplit[1], MessageSplit[0], fontSplit[0], Integer.parseInt(fontSplit[1]), Integer.parseInt(fontSplit[2]), fontSplit[3], fontSplit[4]);
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    else if (!toUsername.equals(cl.get(0))){
+                        popWindows(s + "参与会话", "会话邀请");
+                    }
                     // 发起群聊或私聊
                 }
             });
@@ -652,28 +670,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
         return att;
     }
-
-    /*
-    private void receive() throws IOException {
-        while (true) {
-            String string = client.receive();
-            String[] output = string.split("@");
-            switch (output[2]) {
-                case
-            }
-            if (output[0].equals("0")) {
-                synchronized (txtRcd) {
-                    txtRcd.setEditable(true);
-                    txtRcd.append(output[1] + ":\n    " + output[2] + "\n\n");
-                    txtRcd.setEditable(false);
-                }
-            }
-            System.out.println(string);
-
-        }
-    }
-
-     */
 
     // 弹出提示信息
     public void popWindows(String strWarning, String strTitle) {

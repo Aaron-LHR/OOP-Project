@@ -71,4 +71,8 @@ public class Flag {
     public String getPrivateContent() {
         return privateContent;
     }
+
+    public void setCurToUsername(String curToUsername) {
+        this.curToUsername = curToUsername;
+    }
 }
