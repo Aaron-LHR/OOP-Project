@@ -16,6 +16,9 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -25,10 +28,10 @@ public class chatRoom extends JFrame implements ActionListener {
     String toUsername = "cdf";
 
     // 聊天界面
-    JPanel topBar, leftBar;
+    JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
@@ -257,41 +260,52 @@ public class chatRoom extends JFrame implements ActionListener {
             topBar.add(txtName);
             topBar.add(btnExt);
 
-            /* 侧边栏
-            leftBar = new JPanel();
-            leftBar.setBorder(BorderFactory.createTitledBorder(null, "在线用户", TitledBorder.DEFAULT_JUSTIFICATION,
-                    TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            leftBar.setLayout(null);
-            leftBar.setFont(new Font("宋体", 0, 12));
-            leftBar.setBackground(new Color(255, 255, 255)); // white
-            leftBar.setBounds(5,80, 165, 590);
-
-             */
-
-
             // 在线用户列表
             onlineList = new JList();
 
             try {
                 onlineList.setListData(getOnlineList());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | IOException err) {
+                err.printStackTrace();
             }
 
+            onlineList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            onlineList.setSelectedIndex(0);
+
+            /*
             onlineList.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
-                    popWindows("该用户在线", "在线提示");
+                    popWindows("该用户在线: " + onlineList.getSelectedValue(), "在线提示");
                 }
             });
 
-            listScroll = new JScrollPane();
+             */
+
+            listScroll = new JScrollPane(onlineList);
             listScroll.setBorder(BorderFactory.createTitledBorder(null, "在线用户", TitledBorder.DEFAULT_JUSTIFICATION,
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            listScroll.setLayout(null);
             listScroll.setFont(new Font("宋体", 0, 12));
             listScroll.setBackground(new Color(255, 255, 255)); // white
-            listScroll.setBounds(5,80, 165, 550);
+            listScroll.setBounds(5,80, 165, 560);
+
+            btnChat = new JButton("发起会话");
+            btnChat.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    List<String> cl = onlineList.getSelectedValuesList();
+                    String s = strName + "邀请";
+                    for (int i = 0; i < cl.size(); i++) {
+                        if (i != cl.size() - 1) s += (cl.get(i) + "、");
+                        else s += cl.get(i);
+                    }
+                    popWindows(s + "参与会话", "会话邀请");
+
+                    // 发起群聊或私聊
+                }
+            });
+            btnChat.setFont(new Font("宋体", 0, 12));
+            btnChat.setBounds(5, 645, 80, 30);
 
             btnRfrsh = new JButton("刷新");
             btnRfrsh.addActionListener(new ActionListener() {
@@ -305,7 +319,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnRfrsh.setFont(new Font("宋体", 0, 12));
-            btnRfrsh.setBounds(90, 635, 80, 30);
+            btnRfrsh.setBounds(90, 645, 80, 30);
 
             // 对话框
             txtRcd = new JTextPane();
@@ -409,9 +423,9 @@ public class chatRoom extends JFrame implements ActionListener {
             setLayout(null);
 
             add(topBar);
-            // add(leftBar);
 
             add(listScroll);
+            add(btnChat);
             add(btnRfrsh);
 
             add(txtScr);
@@ -431,12 +445,10 @@ public class chatRoom extends JFrame implements ActionListener {
 
             add(btnRmv);
             add(btnSmt);
-            getRootPane().setDefaultButton(btnSmt); // 默认回车按钮
 
             // 设置界面可见
             setVisible(true);
             // receive();
-
 
         }
 
@@ -495,7 +507,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 String s1 = df.format(new Date()) + "  " + name + "\n";
                 String s2 = attrib.getText() + "\n\n";
 
-                FontAttrib attrib1 = new FontAttrib(s1);
+                FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
 
                 doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
                 doc.insertString(doc.getLength(), s2, attrib.getAttrSet());
@@ -505,6 +517,26 @@ public class chatRoom extends JFrame implements ActionListener {
             }
 
         }
+    }
+
+    public void infoTransfer(String msg, String name, String font_Name, int style, int size, String color, String backCol) {
+        Color c1 = null, c2 = null;
+
+        if (color.equals("黑色")) c1 = Color.BLACK;
+        else if (color.equals("红色")) c1 = Color.RED;
+        else if (color.equals("蓝色")) c1 = Color.BLUE;
+        else if (color.equals("黄色")) c1 = Color.YELLOW;
+        else if (color.equals("绿色")) c1 = Color.GREEN;
+
+        if (backCol.equals("黑色")) c2 = Color.BLACK;
+        else if (backCol.equals("红色")) c2 = Color.RED;
+        else if (backCol.equals("蓝色")) c2 = Color.BLUE;
+        else if (backCol.equals("黄色")) c2 = Color.YELLOW;
+        else if (backCol.equals("绿色")) c2 = Color.GREEN;
+
+        FontAttrib att = new FontAttrib(msg, font_Name, style, size, c1, c2);
+
+        submitText(att, name);
     }
 
     public FontAttrib getFontAttrib() {
@@ -594,7 +626,7 @@ public class chatRoom extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, strWarning, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private String[] getOnlineList() throws IOException, InterruptedException {
+    public String[] getOnlineList() throws IOException, InterruptedException {
         return client.getOnlineList();
     }
 
