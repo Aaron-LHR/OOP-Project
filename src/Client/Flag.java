@@ -17,7 +17,7 @@ public class Flag {
     int sendGroupMessage;
     int onlineListFlag;
     String[] onlineList;
-    String curToUsername;
+    String curToUsername = "cdf";
     String privateContent;
 
     public boolean isModify() {

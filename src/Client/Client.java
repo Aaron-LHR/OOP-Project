@@ -158,6 +158,7 @@ public class Client {
                 runFlag.wait();
             }
             if (runFlag.sendPrivateMessage == 0) {
+                saveRecord(username, ToUsername, s, font);
                 return true;
             }
             else {

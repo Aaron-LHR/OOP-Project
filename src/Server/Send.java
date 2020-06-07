@@ -26,7 +26,7 @@ public class Send extends Thread {//@fromUser@content
             DataInputStream in=new DataInputStream(socket.getInputStream());
             if (Server.online.get(toUser)==null){
                 System.out.println(toUser+"未上线");
-                out.writeUTF("@"+toUser+"@101@0");
+                out.writeUTF("@"+toUser+"@101@1");
                 out.flush();
             }
             else {
@@ -36,7 +36,7 @@ public class Send extends Thread {//@fromUser@content
                 sout.writeUTF(msg);
                 System.out.println("发送至"+toUser+":"+msg);
                 sout.flush();
-                out.writeUTF("@"+toUser+"@101@1");
+                out.writeUTF("@"+toUser+"@101@0");
                 out.flush();
             }
 

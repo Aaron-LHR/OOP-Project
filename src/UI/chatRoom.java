@@ -27,11 +27,12 @@ public class chatRoom extends JFrame implements ActionListener {
     Flag runFlag = Flag.getInstance();
     String toUsername = "cdf";
 
+
     // 聊天界面
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
@@ -44,7 +45,7 @@ public class chatRoom extends JFrame implements ActionListener {
     // 登录界面
     JPanel pnlLgn;
     JLabel lbSrvIP, lbUsr, lbPwd;
-    JTextField txtSrvIP, txtUsr;
+    JTextField txtSrvIP, txtUsr, txtShift;
     JPasswordField txtPwd;
     JButton btnLgn, btnRgst, btnExit;
 
@@ -251,6 +252,24 @@ public class chatRoom extends JFrame implements ActionListener {
             btnExt.setFont(new Font("宋体", 0, 12));
             btnExt.setBounds(720, 15, 100, 35);
 
+            txtShift = new JTextField(3);
+            txtShift.setText("1111");
+            txtShift.setBorder(BorderFactory.createEtchedBorder());
+            txtShift.setBackground(Color.WHITE);
+            txtShift.setFont(new Font("宋体", 0, 12));
+            txtShift.setEditable(false);
+            txtShift.setBounds(70, 20, 100, 35);
+
+            btnshift = new JButton("切换");
+            btnshift.setFont(new Font("宋体", 0, 12));
+            btnshift.setBounds(720, 15, 100, 35);
+            btnshift.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    toUsername = txtShift.getText();
+                }
+            });
+
             // 添加至 topBar
             topBar.add(lbPort);
             topBar.add(txtPort);
@@ -259,6 +278,7 @@ public class chatRoom extends JFrame implements ActionListener {
             topBar.add(lbName);
             topBar.add(txtName);
             topBar.add(btnExt);
+
 
             // 在线用户列表
             onlineList = new JList();
@@ -382,7 +402,37 @@ public class chatRoom extends JFrame implements ActionListener {
                     try {
                         String s = txtMsg.getText();
                         FontAttrib font = getFontAttrib();
-                        String Font = font.name + "#" + font.style + "#" + font.style + "#" + font.size + "#" + font.color + "#" + font.backColor;
+                        String color = "黑色";
+                        String backColor = "无色";
+                        if (Color.BLACK.equals(font.color)) {
+                            color = "黑色";
+                        } else if (Color.red.equals(font.color)) {
+                            color = "红色";
+                        } else if (Color.BLUE.equals(font.color)) {
+                            color = "蓝色";
+                        } else if (Color.YELLOW.equals(font.color)) {
+                            color = "黄色";
+                        } else if (Color.GREEN.equals(font.color)) {
+                            color = "绿色";
+                        }
+                        if (font.backColor != null) {
+                            if (font.backColor.equals(new Color(200, 200, 200))) {
+                                backColor = "灰色";
+                            }
+                            else if (font.backColor.equals(new Color(255, 200, 200))) {
+                                backColor = "淡红";
+                            }
+                            else if (font.backColor.equals(new Color(200, 200, 255))) {
+                                backColor = "淡蓝";
+                            }
+                            else if (font.backColor.equals(new Color(255, 255, 200))) {
+                                backColor = "淡黄";
+                            }
+                            else if (font.backColor.equals(new Color(200, 255, 200))) {
+                                backColor = "淡绿";
+                            }
+                        }
+                        String Font = font.name + "#" + font.style + "#" + font.size + "#" + color + "#" + backColor;
                         if (!client.send(toUsername, s, Font)) {
                             popWindows("对方不在线", "提示");
                         }
@@ -442,6 +492,8 @@ public class chatRoom extends JFrame implements ActionListener {
             add(fontColor);
             add(fbackcol);
             add(fontBackColor);
+            add(txtShift);
+            add(btnshift);
 
             add(txtScroll);
 
