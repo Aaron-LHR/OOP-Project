@@ -68,8 +68,8 @@ public class chatRoom extends JFrame implements ActionListener {
         pnlLgn.setLayout(null);
 
         lbSrvIP = new JLabel("服务器IP：");
-        lbUsr = new JLabel("用户名：");
-        lbPwd = new JLabel("密码：");
+        lbUsr = new JLabel(" 用户名：");
+        lbPwd = new JLabel("    密码：");
         txtSrvIP = new JTextField(12);
         txtUsr = new JTextField(12);
         txtPwd = new JPasswordField(12);
@@ -198,7 +198,7 @@ public class chatRoom extends JFrame implements ActionListener {
 
             // 上边栏内信息:
             // 端口
-            lbPort = new JLabel("端口");
+            lbPort = new JLabel("端口:");
             lbPort.setFont(new Font("宋体", 0, 14));
             lbPort.setBounds(10, 27, 35, 20);
 
@@ -211,7 +211,7 @@ public class chatRoom extends JFrame implements ActionListener {
             txtPort.setBounds(55, 25, 80, 30);
 
             // 服务器IP
-            lbIP = new JLabel("服务器IP");
+            lbIP = new JLabel("服务器IP:");
             lbIP.setFont(new Font("宋体", 0, 14));
             lbIP.setBounds(155, 27, 60, 20);
 
@@ -224,7 +224,7 @@ public class chatRoom extends JFrame implements ActionListener {
             txtIP.setBounds(225, 25, 80, 30);
 
             // 姓名
-            lbName = new JLabel("姓名");
+            lbName = new JLabel("姓名:");
             lbName.setFont(new Font("宋体", 0, 14));
             lbName.setBounds(325, 27, 35, 20);
 
