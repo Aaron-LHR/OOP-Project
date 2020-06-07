@@ -60,9 +60,8 @@ public class Control extends Thread{
 
                 if (buff.charAt(0)=='@'){//发送信息：@fromUser@ToUser@content
                     String[] tmp=buff.split("@");
-                    int t=tmp[1].length()+tmp[2].length()+3;
-                    String content= buff.substring(t);
-                    new Send(tmp[1],tmp[2],content,socket).start();
+
+                    new Send(tmp[1],tmp[2],tmp[3],tmp[4],socket).start();
                 }
 
                 if (buff.charAt(0)=='-'&&buff.charAt(1)=='-'){//注销：--username

@@ -6,7 +6,7 @@ import java.net.Socket;
 public class GroupChat extends Thread {
     Socket socket;
     String buff;
-    public GroupChat(String buff, Socket socket){//群聊：##GROUPCHAT##群聊名字+群主用户名##name(发送方用户名)##content
+    public GroupChat(String buff, Socket socket){//群聊：##GROUPCHAT##群聊名字+群主用户名##name(发送方用户名)##content##font
         this.socket=socket;
         this.buff=buff;
     }
@@ -21,7 +21,7 @@ public class GroupChat extends Thread {
             tmp=buff.split("##");
             File group=new File("Group/"+tmp[2]);
 
-            if (tmp.length!=5){
+            if (tmp.length!=6){
                 out.writeUTF("@"+tmp[3]+"@104@2");//传输格式出现错误
                 out.flush();
                 System.out.println("传输格式有误");
@@ -55,7 +55,7 @@ public class GroupChat extends Thread {
                 Socket s1=Server.online.get(i);
                 if (s1!=null){
                     DataOutputStream out1 = new DataOutputStream(s1.getOutputStream());
-                    out1.writeUTF("@"+tmp[2]+"@201@"+tmp[3]+"@"+tmp[4]);
+                    out1.writeUTF("@"+tmp[2]+"@201@"+tmp[3]+"@"+tmp[4]+"@"+tmp[5]);
                 }
             }
 

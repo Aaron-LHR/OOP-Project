@@ -9,12 +9,14 @@ public class Send extends Thread {//@fromUser@content
     private String toUser;
     private String fromUser;
     private String content;
+    private String font;
     private Socket socket;
-    public Send(String fromUser, String toUser, String content, Socket socket){
+    public Send(String fromUser, String toUser, String content, String font,Socket socket){
         this.toUser=toUser;
         this.fromUser=fromUser;
         this.content=content;
         this.socket=socket;
+        this.font=font;
     }
     @Override
     public void run() {
@@ -30,7 +32,7 @@ public class Send extends Thread {//@fromUser@content
             else {
                 Socket send=Server.online.get(toUser);
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
-                String msg="@"+fromUser+"@200@"+content;
+                String msg="@"+fromUser+"@200@"+content+"@"+font;
                 sout.writeUTF(msg);
                 System.out.println("发送至"+toUser+":"+msg);
                 sout.flush();

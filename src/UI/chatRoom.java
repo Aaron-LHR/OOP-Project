@@ -654,6 +654,17 @@ public class chatRoom extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {}
 
     public static void main(String[] args) throws IOException {
+        try {//修改风格
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                System.out.println(info.getName());
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        }catch(Exception e) {
+            System.out.println(e);
+        }
         new chatRoom();
     }
 
