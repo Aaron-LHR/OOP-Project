@@ -101,13 +101,11 @@ public class ReceiveThread implements Runnable {
                                     break;
                             }
                             break;
-                        /*
                         case "200":
                             if (output[1].equals(flag.curToUsername)) {
-                                chatRoom.submitText(output[3], output[1]);
+//                                chatRoom.submitText(output[3], output[1]);
                             }
 
-                         */
                     }
                     flag.notify();
                 }
