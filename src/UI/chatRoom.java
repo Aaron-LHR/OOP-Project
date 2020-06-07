@@ -199,8 +199,8 @@ public class chatRoom extends JFrame implements ActionListener {
             // 上边栏内信息:
             // 端口
             lbPort = new JLabel("端口");
-            lbPort.setFont(new Font("宋体", 0, 12));
-            lbPort.setBounds(10, 30, 50, 12);
+            lbPort.setFont(new Font("宋体", 0, 14));
+            lbPort.setBounds(10, 27, 35, 20);
 
             txtPort = new JTextField();
             txtPort.setText("1111");
@@ -208,12 +208,12 @@ public class chatRoom extends JFrame implements ActionListener {
             txtPort.setBackground(Color.WHITE);
             txtPort.setFont(new Font("宋体", 0, 12));
             txtPort.setEditable(false);
-            txtPort.setBounds(70, 20, 100, 35);
+            txtPort.setBounds(55, 25, 80, 30);
 
             // 服务器IP
             lbIP = new JLabel("服务器IP");
-            lbIP.setFont(new Font("宋体", 0, 12));
-            lbIP.setBounds(210, 30, 50, 12);
+            lbIP.setFont(new Font("宋体", 0, 14));
+            lbIP.setBounds(155, 27, 60, 20);
 
             txtIP = new JTextField();
             txtIP.setText("127.0.0.1");
@@ -221,12 +221,12 @@ public class chatRoom extends JFrame implements ActionListener {
             txtIP.setBackground(Color.WHITE);
             txtIP.setFont(new Font("宋体", 0, 12));
             txtIP.setEditable(false);
-            txtIP.setBounds(270, 20, 100, 35);
+            txtIP.setBounds(225, 25, 80, 30);
 
             // 姓名
             lbName = new JLabel("姓名");
-            lbName.setFont(new Font("宋体", 0, 12));
-            lbName.setBounds(420, 30, 50, 12);
+            lbName.setFont(new Font("宋体", 0, 14));
+            lbName.setBounds(325, 27, 35, 20);
 
             txtName = new JTextField(10);
             txtName.setText(strName);
@@ -234,7 +234,7 @@ public class chatRoom extends JFrame implements ActionListener {
             txtName.setBackground(Color.WHITE);
             txtName.setFont(new Font("宋体", 0, 12));
             txtName.setEditable(false);
-            txtName.setBounds(480, 20, 100, 35);
+            txtName.setBounds(370, 25, 80, 30);
 
             // 退出按钮
             btnExt = new JButton("退出");
@@ -250,7 +250,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnExt.setFont(new Font("宋体", 0, 12));
-            btnExt.setBounds(720, 15, 100, 35);
+            btnExt.setBounds(720, 25, 100, 30);
 
             txtShift = new JTextField(3);
             txtShift.setText("1111");
@@ -291,16 +291,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
             onlineList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             onlineList.setSelectedIndex(0);
-
-            /*
-            onlineList.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    popWindows("该用户在线: " + onlineList.getSelectedValue(), "在线提示");
-                }
-            });
-
-             */
 
             listScroll = new JScrollPane(onlineList);
             listScroll.setBorder(BorderFactory.createTitledBorder(null, "在线用户", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -343,7 +333,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnChat.setFont(new Font("宋体", 0, 12));
-            btnChat.setBounds(5, 645, 80, 30);
+            btnChat.setBounds(5, 640, 80, 30);
 
             btnRfrsh = new JButton("刷新");
             btnRfrsh.addActionListener(new ActionListener() {
@@ -357,7 +347,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnRfrsh.setFont(new Font("宋体", 0, 12));
-            btnRfrsh.setBounds(90, 645, 80, 30);
+            btnRfrsh.setBounds(90, 640, 80, 30);
 
             // 对话框
             txtRcd = new JTextPane();
@@ -485,7 +475,7 @@ public class chatRoom extends JFrame implements ActionListener {
             txtScroll = new JScrollPane(txtMsg);
             txtScroll.setBorder(BorderFactory.createTitledBorder(null, "发送", TitledBorder.DEFAULT_JUSTIFICATION,
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
-            txtScroll.setBounds(175, 570, 670,100);
+            txtScroll.setBounds(175, 560, 670, 113);
             txtScroll.setBackground(new Color(250, 250, 250));
             txtScroll.setFont(new Font("宋体", 0, 12));
 
@@ -600,11 +590,12 @@ public class chatRoom extends JFrame implements ActionListener {
         else if (color.equals("黄色")) c1 = Color.YELLOW;
         else if (color.equals("绿色")) c1 = Color.GREEN;
 
-        if (backCol.equals("黑色")) c2 = Color.BLACK;
-        else if (backCol.equals("红色")) c2 = Color.RED;
-        else if (backCol.equals("蓝色")) c2 = Color.BLUE;
-        else if (backCol.equals("黄色")) c2 = Color.YELLOW;
-        else if (backCol.equals("绿色")) c2 = Color.GREEN;
+        if (backCol.equals("无色")) c2 = Color.WHITE;
+        else if (backCol.equals("灰色")) c2 = new Color(200, 200, 200);
+        else if (backCol.equals("淡红")) c2 = new Color(255, 200, 200);
+        else if (backCol.equals("淡蓝")) c2 = new Color(200, 200, 255);
+        else if (backCol.equals("淡黄")) c2 = new Color(255, 255, 200);
+        else if (backCol.equals("淡绿")) c2 = new Color(200, 255, 200);
 
         FontAttrib att = new FontAttrib(msg, font_Name, style, size, c1, c2);
 
