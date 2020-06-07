@@ -103,9 +103,10 @@ public class ReceiveThread implements Runnable {
                             break;
                         case "200":
                             if (output[1].equals(flag.curToUsername)) {
-//                                chatRoom.submitText(output[3], output[1]);
+                                String[] font = output[4].split("#");
+                                chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
                             }
-
+                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4]);
                     }
                     flag.notify();
                 }

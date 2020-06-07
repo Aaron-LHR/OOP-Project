@@ -3,11 +3,13 @@ package Client;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.regex.Pattern;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
     private Flag runFlag = Flag.getInstance();
-    private String username;
+    private static String username;
 //    private String password;
     BufferedReader input;
     private String IP;
@@ -80,8 +82,45 @@ public class Client {
         }
     }
 
-    public void exit() throws IOException {
+    public static void saveRecord(String localUsername, String toUsername, String content, String font) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(localUsername + "##" + toUsername + "##Record", true);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+        outputStreamWriter.write(content + "@" + font + "\n", 0, content.length());
+    }
+
+    public static List<String> readRecord(String localUsername, String toUsername) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(localUsername + "##" + toUsername + "##Record");
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        int c, i = 0;
+        char[] line = new char[1024];
+        List<String> list= new ArrayList<>();
+        while ((c = inputStreamReader.read())!=-1) {
+            if ((char) c == '\n') {
+                list.add(new String(line));
+                i = 0;
+            }
+            else {
+                line[i++] = (char) c;
+            }
+        }
+        return list;
+    }
+
+    public void exit() throws IOException, InterruptedException {
         dos.writeUTF("--" + username);
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            if (runFlag.logout == 0) {
+                System.out.println("注销成功");
+                runFlag.modify = false;
+            }
+            else{
+                System.out.println("注销失败");
+                runFlag.modify = false;
+            }
+        }
         input.close();
         dos.close();
         dis.close();
@@ -92,15 +131,15 @@ public class Client {
         return runFlag;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public static void setUsername(String username) {
+        Client.username = username;
     }
 
 //    public void setPassword(String password) {
 //        this.password = password;
 //    }
 
-    public String getUsername() {
+    public static String getUsername() {
         return username;
     }
 
@@ -112,8 +151,8 @@ public class Client {
         return dis;
     }
 
-    public boolean send(String ToUsername, String s) throws IOException, InterruptedException {
-        dos.writeUTF("@" + username + "@" + ToUsername + "@" + s);
+    public boolean send(String ToUsername, String s, String font) throws IOException, InterruptedException {
+        dos.writeUTF("@" + username + "@" + ToUsername + "@" + s + "@" + font);
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();

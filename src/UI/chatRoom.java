@@ -96,7 +96,7 @@ public class chatRoom extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     closeDiaLgnFrame();
-                } catch (IOException ex) {
+                } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -107,7 +107,7 @@ public class chatRoom extends JFrame implements ActionListener {
             public void windowClosing(WindowEvent e) {
                 try {
                     closeDiaLgnFrame();
-                } catch (IOException ex) {
+                } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -243,7 +243,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     btnExt.setBackground(new Color(30, 144, 255));
                     try {
                         closeChatFrame();
-                    } catch (IOException ex) {
+                    } catch (IOException | InterruptedException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -300,7 +300,7 @@ public class chatRoom extends JFrame implements ActionListener {
                         else s += cl.get(i);
                     }
                     popWindows(s + "参与会话", "会话邀请");
-
+                    toUsername = cl.get(1);
                     // 发起群聊或私聊
                 }
             });
@@ -381,7 +381,9 @@ public class chatRoom extends JFrame implements ActionListener {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         String s = txtMsg.getText();
-                        if (!client.send(toUsername, s)) {
+                        FontAttrib font = getFontAttrib();
+                        String Font = font.name + "#" + font.style + "#" + font.style + "#" + font.size + "#" + font.color + "#" + font.backColor;
+                        if (!client.send(toUsername, s, Font)) {
                             popWindows("对方不在线", "提示");
                         }
                         else {
@@ -454,12 +456,12 @@ public class chatRoom extends JFrame implements ActionListener {
 
     }
 
-    public void closeChatFrame() throws IOException {
-        this.dispose();
+    public void closeChatFrame() throws IOException, InterruptedException {
         client.exit();
+        this.dispose();
     }
 
-    public void closeDiaLgnFrame() throws IOException {
+    public void closeDiaLgnFrame() throws IOException, InterruptedException {
         diaLgnFrame.dispose();
         flag = false;
         closeChatFrame();
