@@ -325,7 +325,7 @@ public class chatRoom extends JFrame implements ActionListener {
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
                         }
-                        txtMsg.setText("");
+                        txtRcd.setText("");
                         try {
                             for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
                                 String[] MessageSplit = loadMessage.split("@");
