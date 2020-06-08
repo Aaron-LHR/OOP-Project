@@ -274,7 +274,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 err.printStackTrace();
             }
 
-            onlineList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            onlineList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             onlineList.setSelectedIndex(0);
 
             listScroll = new JScrollPane(onlineList);
