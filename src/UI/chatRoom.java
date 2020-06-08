@@ -686,6 +686,27 @@ public class chatRoom extends JFrame implements ActionListener {
         });
     }
 
+    public void clearBox() throws BadLocationException {
+        remove(txtScr);
+        remove(txtRcd);
+        txtRcd = new JTextPane();
+        txtRcd.setEditable(false);
+        doc = txtRcd.getStyledDocument();
+
+        txtScr = new JScrollPane(txtRcd);
+        txtScr.setBorder(BorderFactory.createTitledBorder(null, "聊天信息", TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
+        txtScr.setBounds(175,80, 670, 415);
+        txtScr.setBackground(new Color(255, 255, 255));
+        txtScr.setFont(new Font("宋体", 0, 12));
+
+        add(txtScr);
+        setVisible(true);
+        repaint();
+        validate();
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {}
 
