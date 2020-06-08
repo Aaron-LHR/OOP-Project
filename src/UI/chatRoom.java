@@ -162,15 +162,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
         if (flag) {
 
-            /* 使用Windows的界面风格
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-             */
-
             // 聊天室界面
             this.setSize(850, 700);
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -289,7 +280,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 err.printStackTrace();
             }
 
-            onlineList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            onlineList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             onlineList.setSelectedIndex(0);
 
             listScroll = new JScrollPane(onlineList);
@@ -671,23 +662,29 @@ public class chatRoom extends JFrame implements ActionListener {
         return client.getOnlineList();
     }
 
-    /*
-    // 建立与服务端通信的套接字
-    public void connectServer() {
-        try {
-            skt = new Socket(txtSrvIP.getText(), 8888);
-            in = new BufferedReader(new InputStreamReader(skt.getInputStream()));
-            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(skt.getOutputStream())), true);
-        } catch (ConnectException e) {
-            popWindows("连接服务器失败!", "ERROR CONNECTION");
-            txtSrvIP.setText("");
-            System.out.println(e);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
+    public void infoReminder(String name) {
+        onlineList.setCellRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                String s = (String)value;
+                if (s.equals(name))  setBackground(Color.GREEN);
+                return this;
+            }
+        });
 
-     */
+        popWindows(name + "向你发送信息", "消息提示");
+
+        onlineList.setCellRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                String s = (String)value;
+                if (s.equals(name))  setBackground(Color.WHITE);
+                return this;
+            }
+        });
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {}
