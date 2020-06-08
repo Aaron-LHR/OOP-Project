@@ -32,11 +32,11 @@ public class Send extends Thread {//@fromUser@content
             else {
                 Socket send=Server.online.get(toUser);
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
+                out.writeUTF("@"+toUser+"@101@0");
                 String msg="@"+fromUser+"@200@"+content+"@"+font;
                 sout.writeUTF(msg);
                 System.out.println("发送至"+toUser+":"+msg);
                 sout.flush();
-                out.writeUTF("@"+toUser+"@101@0");
                 out.flush();
             }
         } catch (IOException e) {

@@ -52,6 +52,8 @@ public class Client {
                 username = username_tmp;
 //            password = password_tmp;
                 runFlag.modify = false;
+                File f = new File(username + "##" + username + "##Record");
+                f.createNewFile();
                 return true;
             }
             else{
@@ -161,7 +163,7 @@ public class Client {
         return dis;
     }
 
-    public boolean send(String ToUsername, String s, String font) throws IOException, InterruptedException {
+    public boolean sendPrivateMessage(String ToUsername, String s, String font) throws IOException, InterruptedException {
         dos.writeUTF("@" + username + "@" + ToUsername + "@" + s + "@" + font);
         synchronized (runFlag) {
             while (!runFlag.modify) {
@@ -169,11 +171,41 @@ public class Client {
             }
             if (runFlag.sendPrivateMessage == 0) {
                 saveRecord(username, ToUsername, s, font, true);
+                runFlag.modify = false;
                 return true;
             }
             else {
+                runFlag.modify = false;
                 return false;
             }
+        }
+    }
+
+    public boolean sendGroupMessage(String ToUsername, String s, String font) throws IOException, InterruptedException {
+        dos.writeUTF("##GROUPCHAT##" + username + "##" + ToUsername + "##" + s + "##" + font); //##GROUPCHAT##name(发送方用户名)##groupname ##content##字体
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            if (runFlag.sendGroupMessage == 0) {
+//                saveRecord(username, ToUsername, s, font, true);
+                runFlag.modify = false;
+                return true;
+            }
+            else {
+                runFlag.modify = false;
+                return false;
+            }
+        }
+    }
+
+    public void activateGroup(String name) throws IOException, InterruptedException {
+        dos.writeUTF("##GROUPON##" + name);
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            runFlag.modify = false;
         }
     }
 
@@ -183,16 +215,31 @@ public class Client {
             while (!runFlag.modify) {
                 runFlag.wait();
             }
+            runFlag.modify = false;
             return runFlag.getOnlineList();
         }
     }
 
-    public String receive() throws IOException {
-//        String ret = dis.readUTF();
-//        if (Pattern.matches("@*@*@", ret))
-//        return "0" + ret;   //返回消息
-//        else if ()
-//        return "";
-        return dis.readUTF();
+    public boolean createGroup(String groupName, String host, String[] usernames) throws IOException, InterruptedException {
+        StringBuilder s = new StringBuilder("");
+        for (String t : usernames) {
+            s.append(t);
+        }
+        dos.writeUTF("##ADDGROUP" + "##群：" + groupName + "##(" + host + ")##" + s.toString());
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            if (runFlag.createGroup == 0) {
+                System.out.println("创建群聊成功");
+                runFlag.modify = false;
+                return true;
+            }
+            else{
+                System.out.println("群聊已存在");
+                runFlag.modify = false;
+                return false;
+            }
+        }
     }
 }

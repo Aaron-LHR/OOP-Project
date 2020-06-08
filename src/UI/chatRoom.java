@@ -6,26 +6,20 @@ import Client.ReceiveThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.net.ConnectException;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Date;
 
 
 public class chatRoom extends JFrame implements ActionListener {
     Client client = Client.getInstance();
     Flag runFlag = Flag.getInstance();
-    String toUsername = "cdf";
+    String toUsername = "";
 
 
     // 聊天界面
@@ -295,18 +289,14 @@ public class chatRoom extends JFrame implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     List<String> cl = onlineList.getSelectedValuesList();
-                    String s = strName + "邀请";
-                    for (int i = 0; i < cl.size(); i++) {
-                        if (i != cl.size() - 1) s += (cl.get(i) + "、");
-                        else s += cl.get(i);
-                    }
-                    if (cl.size() == 1 && !toUsername.equals(cl.get(0))) {
-                        popWindows(s + "私聊", "会话邀请");
+                    if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) != '群') {    //私聊
+                        popWindows(cl.get(0) + "私聊", "会话邀请");
                         toUsername = cl.get(0);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
                         }
                         txtRcd.setText("");
+                        infoReminder(toUsername, false);
                         try {
                             for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
                                 String[] MessageSplit = loadMessage.split("@");
@@ -317,8 +307,52 @@ public class chatRoom extends JFrame implements ActionListener {
                             ex.printStackTrace();
                         }
                     }
-                    else if (!toUsername.equals(cl.get(0))){
-                        popWindows(s + "参与会话", "会话邀请");
+                    else if (cl.size() > 1 && !toUsername.equals(cl.get(0))){   //创建群聊
+                        String s = strName + "邀请";
+                        String[] names = new String[cl.size()];
+                        for (int i = 0; i < cl.size(); i++) {
+                            String tmp = cl.get(i);
+                            if (tmp.charAt(0) == '群') {
+                                popWindows("多选不能选择群聊", "警告");
+                                return;
+                            }
+                            if (i != cl.size() - 1) {
+                                s += (tmp + "、");
+                            }
+                            else {
+                                s += tmp;
+                            }
+                            names[i] = tmp;
+                        }
+                        try {
+                            if (client.createGroup("群聊", Client.getUsername(), names)) {
+                                popWindows(s + "参与会话", "会话邀请");
+                            }
+                            else {
+                                popWindows("群聊已存在", "会话邀请");
+                            }
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                        try {   //刷新列表
+                            onlineList.setListData(getOnlineList());
+                        } catch (InterruptedException | IOException err) {
+                            err.printStackTrace();
+                        }
+
+                    }
+                    else if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) == '群') {   //进入群聊
+                        toUsername = cl.get(0);
+                        synchronized (runFlag) {
+                            runFlag.setCurToUsername(toUsername);
+                        }
+                        txtRcd.setText("");
+                        infoReminder(toUsername, false);
+                        try {
+                            client.activateGroup(toUsername);
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                     // 发起群聊或私聊
                 }
@@ -432,12 +466,23 @@ public class chatRoom extends JFrame implements ActionListener {
                             }
                         }
                         String Font = font.name + "#" + font.style + "#" + font.size + "#" + color + "#" + backColor;
-                        if (!client.send(toUsername, s, Font)) {
-                            popWindows("对方不在线", "提示");
+                        if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
+                            if (!client.sendPrivateMessage(toUsername, s, Font)) {
+                                popWindows("对方不在线", "提示");
+                            }
+                            else {
+                                submitText(getFontAttrib(), strName);
+                                txtMsg.setText("");
+                            }
                         }
-                        else {
-                            submitText(getFontAttrib(), strName);
-                            txtMsg.setText("");
+                        else {  //给群聊发消息
+                            if (!client.sendGroupMessage(toUsername, s, Font)) {
+                                popWindows("群消息发送失败", "提示");
+                            }
+                            else {
+                                submitText(getFontAttrib(), strName);
+                                txtMsg.setText("");
+                            }
                         }
                     } catch (IOException | InterruptedException ex) {
                         ex.printStackTrace();
@@ -662,28 +707,37 @@ public class chatRoom extends JFrame implements ActionListener {
         return client.getOnlineList();
     }
 
-    public void infoReminder(String name) {
+    public void infoReminder(String name, boolean flag) {
         onlineList.setCellRenderer(new DefaultListCellRenderer(){
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String s = (String)value;
-                if (s.equals(name))  setBackground(Color.GREEN);
+                if (s.equals(name)) {
+                    if (flag) {
+                        setBackground(Color.GREEN);
+                    }
+                    else {
+                        setBackground(Color.WHITE);
+                    }
+                }
+
+
                 return this;
             }
         });
 
-        popWindows(name + "向你发送信息", "消息提示");
-
-        onlineList.setCellRenderer(new DefaultListCellRenderer(){
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                String s = (String)value;
-                if (s.equals(name))  setBackground(Color.WHITE);
-                return this;
-            }
-        });
+//        popWindows(name + "向你发送信息", "消息提示");
+//
+//        onlineList.setCellRenderer(new DefaultListCellRenderer(){
+//            @Override
+//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//                String s = (String)value;
+//                if (s.equals(name))  setBackground(Color.WHITE);
+//                return this;
+//            }
+//        });
     }
 
     public void clearBox() throws BadLocationException {
