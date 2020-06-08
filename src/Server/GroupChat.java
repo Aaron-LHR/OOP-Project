@@ -40,7 +40,7 @@ public class GroupChat extends Thread {
             OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
             BufferedWriter bw = new BufferedWriter(osw);
             bw.write(Server.chgl);
-            bw.write("##" + tmp[3] + "##" + tmp[4]);//在文件中：以##发送方用户名##内容，存储
+            bw.write("@"+tmp[2]+"@201@" + tmp[3] + "@" + tmp[4]+ "@"+tmp[5]);//在文件中：以@群聊名字+群主用户名@201@name(发送方用户名)@content@字体存储
             bw.close();
             Server.groupLock.get(tmp[2]).writeLock().unlock();
 
