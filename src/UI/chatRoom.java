@@ -45,6 +45,9 @@ public class chatRoom extends JFrame implements ActionListener {
 
     JDialog diaLgnFrame = new JDialog(this, "登录", true);
 
+    // 搜索群聊窗口
+    groupChat diaGrpChat;
+
     // 辅助参数
     String strName, strPwd;
     boolean flag = true;
@@ -785,6 +788,9 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
+    public void popGrpChat() {
+        diaGrpChat = new groupChat(chatRoomFrame);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {}
