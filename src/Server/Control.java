@@ -9,8 +9,7 @@ import java.util.Map;
 public class Control extends Thread{
     Socket socket;
     String username;
-    public Control(String username,Socket socket){
-        this.username=username;
+    public Control(Socket socket){
         this.socket=socket;
     }
     @Override
@@ -41,6 +40,7 @@ public class Control extends Thread{
                 if (buff.charAt(0)=='!'&&buff.charAt(1)=='!'){//登录:!!name##passwd##
                     String[] tmp=buff.split("##");
                     tmp[0]=tmp[0].substring(2);
+                    username=tmp[0];
                     new Login(tmp[0],tmp[1],socket).start();
                 }
 

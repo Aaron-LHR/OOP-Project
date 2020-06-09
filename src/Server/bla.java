@@ -9,6 +9,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class bla {
     public static void main(String[] args) {
-        Control.searchGroup("1");
+        
     }
 }
