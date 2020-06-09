@@ -223,9 +223,10 @@ public class Client {
     public boolean createGroup(String groupName, String host, String[] usernames) throws IOException, InterruptedException {
         StringBuilder s = new StringBuilder("");
         for (String t : usernames) {
+            s.append("##");
             s.append(t);
         }
-        dos.writeUTF("##ADDGROUP" + "##群：" + groupName + "##(" + host + ")##" + s.toString());
+        dos.writeUTF("##ADDGROUP" + "##群：" + groupName + "##(" + host + ")" + s.toString());
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();

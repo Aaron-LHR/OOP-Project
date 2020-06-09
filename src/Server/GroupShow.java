@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class GroupShow extends Thread{
 
             Server.groupLock.get(name).readLock().lock();
             FileInputStream fi=new FileInputStream(group);
-            InputStreamReader isr=new InputStreamReader(fi,"UTF_8");
+            InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
             BufferedReader br=new BufferedReader(isr);
             List<String > s=new ArrayList<>();
             String tmp=null;

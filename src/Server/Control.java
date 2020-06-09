@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class Control extends Thread{
             if(!f.isDirectory()) {
                 try {
                     FileInputStream fi=new FileInputStream(f);
-                    InputStreamReader isr=new InputStreamReader(fi,"UTF_8");
+                    InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
                     BufferedReader br=new BufferedReader(isr);
                     String[] s=br.readLine().split(" ");
                     for (String i:s){
