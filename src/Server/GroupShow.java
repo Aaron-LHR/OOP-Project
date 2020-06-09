@@ -32,9 +32,9 @@ public class GroupShow extends Thread{
             }
 
             Server.groupLock.get(name).readLock().unlock();
-            out.writeUTF("@"+s.size()+"@103@0");
-            for (String i:s){
-                out.writeUTF(i);
+            out.writeUTF("@"+(s.size()-1)+"@103@0");
+            for (int i=1;i<s.size();i++){
+                out.writeUTF(s.get(i));
             }
 
         }catch (Exception e){

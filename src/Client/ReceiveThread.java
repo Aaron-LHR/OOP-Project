@@ -15,6 +15,12 @@ public class ReceiveThread implements Runnable {
         this.chatRoom = chatRoom;
     }
 
+    private void showMessage() throws IOException {
+        String[] onlineList = dis.readUTF().split("@");
+        String[] font = onlineList[4].split("#");
+        chatRoom.infoTransfer(onlineList[3], onlineList[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -89,13 +95,9 @@ public class ReceiveThread implements Runnable {
                                 case "0":
                                     flag.activateGroup=0;
                                     int n = Integer.parseInt(output[1]);
-                                    String[] onlineList = new String[n];
                                     for (int i = 0; i < n; i++) {
-                                        onlineList[i] = dis.readUTF();
-                                        String[] font = output[4].split("#");
-                                        chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                        showMessage();
                                     }
-                                    flag.onlineList = onlineList;
                                     break;
                             }
                             break;
@@ -105,6 +107,9 @@ public class ReceiveThread implements Runnable {
                                     flag.sendGroupMessage=0;
                                     break;
                                 case "1":
+                                    flag.sendGroupMessage=1;
+                                    break;
+                                case "2":
                                     flag.sendGroupMessage=1;
                                     break;
                             }
@@ -132,16 +137,16 @@ public class ReceiveThread implements Runnable {
                             }
                             Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
                             break;
-                        case "201":
-                            if (output[1].equals(flag.curToUsername)) {
-                                String[] font = output[4].split("#");
-                                chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
-                            }
-                            else {
-                                chatRoom.infoReminder(output[1], true);
-                            }
-//                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
-                            break;
+//                        case "201":
+//                            if (output[1].equals(flag.curToUsername)) {
+//                                String[] font = output[4].split("#");
+//                                chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+//                            }
+//                            else {
+//                                chatRoom.infoReminder(output[1], true);
+//                            }
+////                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
+//                            break;
                     }
                     flag.notify();
                 }
