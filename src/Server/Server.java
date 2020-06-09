@@ -37,6 +37,11 @@ public class Server {
 
     }
     public static void init(){
+        File file = new File("Group/");
+        File[] fs = file.listFiles();
+        for(File f:fs){
+            groupLock.put(f.getName(),new ReentrantReadWriteLock());
+        }
         try {
             String line;
             FileInputStream fis=new FileInputStream(new File("Account"));
