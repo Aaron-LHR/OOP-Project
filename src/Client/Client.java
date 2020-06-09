@@ -182,7 +182,7 @@ public class Client {
     }
 
     public boolean sendGroupMessage(String ToUsername, String s, String font) throws IOException, InterruptedException {
-        dos.writeUTF("##GROUPCHAT##" + username + "##" + ToUsername + "##" + s + "##" + font); //##GROUPCHAT##name(发送方用户名)##groupname ##content##字体
+        dos.writeUTF("##GROUPCHAT##" + ToUsername + "##" + username + "##" + s + "##" + font); //##GROUPCHAT##name(发送方用户名)##groupname ##content##字体
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();
@@ -223,6 +223,7 @@ public class Client {
     public boolean createGroup(String groupName, String host, String[] usernames) throws IOException, InterruptedException {
         StringBuilder s = new StringBuilder("");
         for (String t : usernames) {
+            if (!t.equals(""))
             s.append("##");
             s.append(t);
         }

@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class AddGroup extends Thread{
@@ -47,7 +48,7 @@ public class AddGroup extends Thread{
         }
         try {
             FileOutputStream fos=new FileOutputStream(groupfile);
-            OutputStreamWriter osw=new OutputStreamWriter(fos, "UTF-8");
+            OutputStreamWriter osw=new OutputStreamWriter(fos, StandardCharsets.UTF_8);
             String tmp=member[1].replace("(","");
             tmp=tmp.replace(")","");//群主去括号存储
             osw.write(tmp);

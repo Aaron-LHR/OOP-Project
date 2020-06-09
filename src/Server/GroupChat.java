@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class GroupChat extends Thread {
     Socket socket;
@@ -37,7 +38,7 @@ public class GroupChat extends Thread {
 
             Server.groupLock.get(tmp[2]).writeLock().lock();
             FileOutputStream fos=new FileOutputStream(group,true);
-            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
             BufferedWriter bw = new BufferedWriter(osw);
             bw.write(Server.chgl);
             bw.write("@"+tmp[2]+"@201@" + tmp[3] + "@" + tmp[4]+ "@"+tmp[5]);//在文件中：以@群聊名字+群主用户名@201@name(发送方用户名)@content@字体存储
@@ -47,7 +48,7 @@ public class GroupChat extends Thread {
             sleep(5);
             Server.groupLock.get(tmp[2]).readLock().lock();
             FileInputStream fi=new FileInputStream(group);
-            InputStreamReader isr=new InputStreamReader(fi,"UTF_8");
+            InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
             BufferedReader br=new BufferedReader(isr);
             String[] s=br.readLine().split(" ");
 

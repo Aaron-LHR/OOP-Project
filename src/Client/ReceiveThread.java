@@ -3,22 +3,27 @@ package Client;
 import UI.chatRoom;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ReceiveThread implements Runnable {
-    private DataInputStream dis;
+    private Client client = Client.getInstance();
+    private DataInputStream dis = client.getDis();
+    private DataOutputStream dos = client.getDos();
     chatRoom chatRoom;
     Flag flag = Flag.getInstance();
 
-    public ReceiveThread(DataInputStream dis, chatRoom chatRoom) {
-        this.dis = dis;
+
+    public ReceiveThread(chatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }
 
+
+
     private void showMessage() throws IOException {
         String[] onlineList = dis.readUTF().split("@");
-        String[] font = onlineList[4].split("#");
-        chatRoom.infoTransfer(onlineList[3], onlineList[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+        String[] font = onlineList[5].split("#");
+        chatRoom.infoTransfer(onlineList[4], onlineList[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
     }
 
     @Override
@@ -136,21 +141,23 @@ public class ReceiveThread implements Runnable {
                                 chatRoom.infoReminder(output[1], true);
                             }
                             Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
+                            new Thread(new SendThread(chatRoom)).start();
                             break;
-//                        case "201":
-//                            if (output[1].equals(flag.curToUsername)) {
-//                                String[] font = output[4].split("#");
-//                                chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
-//                            }
-//                            else {
-//                                chatRoom.infoReminder(output[1], true);
-//                            }
-////                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
-//                            break;
+                        case "201":
+                            if (output[1].equals(flag.curToUsername)) {
+                                String[] font = output[5].split("#");
+                                chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                            }
+                            else {
+                                chatRoom.infoReminder(output[1], true);
+                            }
+                            new Thread(new SendThread(chatRoom)).start();
+//                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
+                            break;
                     }
                     flag.notify();
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }

@@ -26,7 +26,8 @@ public class Control extends Thread{
                 try {
                     buff= in.readUTF();
                 }catch (Exception e){
-                    e.printStackTrace();
+                    System.out.println(username+"用户断开链接，已自动注销");
+                    Server.online.remove(username);
                     return;
                 }
 

@@ -55,7 +55,7 @@ public class chatRoom extends JFrame implements ActionListener {
     String[] str_BackColor = { "无色", "灰色", "淡红", "淡蓝", "淡黄", "淡绿" };
 
     public chatRoom() throws IOException {
-        new Thread(new ReceiveThread(client.getDis(), this)).start();
+        new Thread(new ReceiveThread(this)).start();
 
         // 登录界面
         pnlLgn = new JPanel();
@@ -296,7 +296,11 @@ public class chatRoom extends JFrame implements ActionListener {
                             runFlag.setCurToUsername(toUsername);
                         }
                         txtRcd.setText("");
-                        infoReminder(toUsername, false);
+                        try {
+                            infoReminder(toUsername, false);
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
                         try {
                             for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
                                 String[] MessageSplit = loadMessage.split("@");
@@ -322,22 +326,34 @@ public class chatRoom extends JFrame implements ActionListener {
                             else {
                                 s += tmp;
                             }
-                            names[i] = tmp;
+                            if (!tmp.equals(Client.getUsername())) {
+                                names[i] = tmp;
+                            }
                         }
                         try {
                             if (client.createGroup("群聊", Client.getUsername(), names)) {
                                 popWindows(s + "参与会话", "会话邀请");
                             }
                             else {
-                                popWindows("群聊已存在", "会话邀请");
+                                popWindows("群聊已存在，进入群聊", "会话邀请");
+                                toUsername = "群：群聊(" + Client.getUsername() + ")";
+                                synchronized (runFlag) {
+                                    runFlag.setCurToUsername(toUsername);
+                                }
+                                txtRcd.setText("");
+                                try {
+                                    infoReminder(toUsername, false);
+                                } catch (IOException | InterruptedException ex) {
+                                    ex.printStackTrace();
+                                }
+                                try {
+                                    client.activateGroup(toUsername);
+                                } catch (IOException | InterruptedException ex) {
+                                    ex.printStackTrace();
+                                }
                             }
                         } catch (IOException | InterruptedException ex) {
                             ex.printStackTrace();
-                        }
-                        try {   //刷新列表
-                            onlineList.setListData(getOnlineList());
-                        } catch (InterruptedException | IOException err) {
-                            err.printStackTrace();
                         }
 
                     }
@@ -347,7 +363,11 @@ public class chatRoom extends JFrame implements ActionListener {
                             runFlag.setCurToUsername(toUsername);
                         }
                         txtRcd.setText("");
-                        infoReminder(toUsername, false);
+                        try {
+                            infoReminder(toUsername, false);
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
                         try {
                             client.activateGroup(toUsername);
                         } catch (IOException | InterruptedException ex) {
@@ -364,11 +384,7 @@ public class chatRoom extends JFrame implements ActionListener {
             btnRfrsh.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        onlineList.setListData(getOnlineList());
-                    } catch (InterruptedException | IOException err) {
-                        err.printStackTrace();
-                    }
+                    refresh();
                 }
             });
             btnRfrsh.setFont(new Font("宋体", 0, 12));
@@ -480,7 +496,7 @@ public class chatRoom extends JFrame implements ActionListener {
                                 popWindows("群消息发送失败", "提示");
                             }
                             else {
-                                submitText(getFontAttrib(), strName);
+//                                submitText(getFontAttrib(), strName);
                                 txtMsg.setText("");
                             }
                         }
@@ -707,7 +723,8 @@ public class chatRoom extends JFrame implements ActionListener {
         return client.getOnlineList();
     }
 
-    public void infoReminder(String name, boolean flag) {
+    public void infoReminder(String name, boolean flag) throws IOException, InterruptedException {
+//        onlineList.setListData(getOnlineList());
         onlineList.setCellRenderer(new DefaultListCellRenderer(){
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -758,6 +775,14 @@ public class chatRoom extends JFrame implements ActionListener {
         setVisible(true);
         repaint();
         validate();
+    }
+
+    public void refresh() {
+        try {
+            onlineList.setListData(getOnlineList());
+        } catch (InterruptedException | IOException err) {
+            err.printStackTrace();
+        }
     }
 
 

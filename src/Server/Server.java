@@ -5,6 +5,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -45,7 +46,7 @@ public class Server {
         try {
             String line;
             FileInputStream fis=new FileInputStream(new File("Account"));
-            InputStreamReader isr=new InputStreamReader(fis, "UTF-8");
+            InputStreamReader isr=new InputStreamReader(fis, StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(isr);
             while ((line=br.readLine())!=null) {
                 String[] tmp=line.split(" ");
