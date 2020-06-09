@@ -18,6 +18,10 @@ public class Login extends Thread {
                 DataOutputStream out=new DataOutputStream(socket.getOutputStream());
                 DataInputStream in=new DataInputStream(socket.getInputStream());
                 if(Server.account.get(username)!=null&&Server.account.get(username).equals(passwd)){
+                    if (Server.online.get(username)!=null){
+                        out.writeUTF("@name@0@2");//用户已登录
+                        return;
+                    }
                     out.writeUTF("@name@0@0");
                     InetAddress inetAddress=socket.getInetAddress();
                     System.out.println(username+":"+inetAddress.getHostAddress()+":online!");
