@@ -4,15 +4,12 @@ import Client.Client;
 import Client.Flag;
 import Client.ReceiveThread;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,15 +26,13 @@ public class chatRoom extends JFrame implements ActionListener {
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnIcon;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
     JScrollPane txtScroll, txtScr, listScroll;
     JComboBox fontName, fontSize, fontStyle, fontColor, fontBackColor;
     JList onlineList;
-    JFileChooser fileChooser;
-    // FileFilter fileFilter;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -339,6 +334,7 @@ public class chatRoom extends JFrame implements ActionListener {
                             }
                         }
                         try {
+                            popGrpChat();
                             if (client.createGroup("群聊", Client.getUsername(), names)) {
                                 popWindows(s + "参与会话", "会话邀请");
                             }
@@ -527,57 +523,6 @@ public class chatRoom extends JFrame implements ActionListener {
             btnRmv.setFont(new Font("宋体", 0, 12));
             btnRmv.setBounds(680, 535, 80, 30);
 
-            btnIcon = new JButton("图片");
-            btnIcon.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    File directory = new File("./src");
-                    File direct = new File(directory.toString() + "/Icon");
-
-                    /*
-                    fileFilter = new FileFilter() {
-                        @Override
-                        public boolean accept(File f) {
-                            if (!f.getParent().equals(direct.getPath())) return false;
-                            if (!f.getName().endsWith(".png") || !f.getName().endsWith(".jpg") ||
-                                    !f.getName().endsWith(".jpeg") || !f.getName().endsWith(".gif") ||
-                                    !f.getName().endsWith(".bmp"))
-                                return false;
-
-                            BufferedImage srcImg = null;
-                            try {
-                                srcImg = ImageIO.read(new FileInputStream(f));
-
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                            if (srcImg == null || srcImg.getWidth() > 100 || srcImg.getHeight() > 100) return false;
-
-                            return true;
-                        }
-
-                        @Override
-                        public String getDescription() {
-                            return null;
-                        }
-                    };
-
-                     */
-
-                    fileChooser = new JFileChooser(direct);
-                    // fileChooser.setFileFilter(fileFilter);
-                    fileChooser.showOpenDialog(null);
-
-                    try {
-                        if (fileChooser.getSelectedFile() != null) insertIcon(fileChooser.getSelectedFile(), strName);
-                    } catch (BadLocationException badLocationException) {
-                        badLocationException.printStackTrace();
-                    }
-                }
-            });
-            btnIcon.setFont(new Font("宋体", 0, 12));
-            btnIcon.setBounds(595, 535, 80, 30);
-
             // 编辑信息区
             txtMsg = new JTextArea();
             txtMsg.setLineWrap(true); // 激活自动换行功能
@@ -616,7 +561,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
             add(txtScroll);
 
-            add(btnIcon);
             add(btnRmv);
             add(btnSmt);
 
@@ -659,14 +603,18 @@ public class chatRoom extends JFrame implements ActionListener {
         try {
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
-            if (client.Login(username, password)) {
-                popWindows("登录成功", "登录");
-                strName = username;
-                strPwd = password;
-                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
-            }
-            else {
-                popWindows("用户名或密码错误", "登录");
+            switch (client.Login(username, password)) {
+                case 0:
+                    popWindows("登录成功", "登录");
+                    strName = username;
+                    strPwd = password;
+                    diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
+                    break;
+                case 1:
+                    popWindows("用户名或密码错误", "登录");
+                    break;
+                case 2:
+                    popWindows("该用户已登录", "登录");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -847,20 +795,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
     public void popGrpChat() {
         diaGrpChat = new groupChat(chatRoomFrame);
-    }
-
-    public void insertIcon(File file, String name) throws BadLocationException {
-        synchronized (txtRcd) {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-            String s1 = df.format(new Date()) + "  " + name + "\n";
-            FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
-            doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
-
-            txtRcd.setCaretPosition(doc.getLength());
-            txtRcd.insertIcon(new ImageIcon(file.getPath()));
-            FontAttrib attrib = new FontAttrib();
-            doc.insertString(doc.getLength(), attrib.getText() + "\n", attrib.getAttrSet());
-        }
     }
 
     @Override

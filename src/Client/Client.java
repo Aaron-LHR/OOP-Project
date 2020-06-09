@@ -40,26 +40,32 @@ public class Client {
         dis = new DataInputStream(socket.getInputStream());
     }
 
-    public boolean Login(String username_tmp, String password_tmp) throws IOException, InterruptedException {
+    public int Login(String username_tmp, String password_tmp) throws IOException, InterruptedException {
         dos.writeUTF("!!" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();
             }
-            if (runFlag.login == 0) {
-                System.out.println("登录成功");
-                username = username_tmp;
+            switch (runFlag.login) {
+                case 0:
+                    System.out.println("登录成功");
+                    username = username_tmp;
 //            password = password_tmp;
-                runFlag.modify = false;
-                File f = new File(username + "##" + username + "##Record");
-                f.createNewFile();
-                return true;
-            }
-            else{
-                System.out.println("登录失败，请重试");
-                runFlag.modify = false;
-                return false;
+                    runFlag.modify = false;
+                    File f = new File(username + "##" + username + "##Record");
+                    f.createNewFile();
+                    return 0;
+                case 1:
+                    System.out.println("用户名或密码错误，请重试");
+                    runFlag.modify = false;
+                    return 1;
+                case 2:
+                    System.out.println("该用户已登录");
+                    runFlag.modify = false;
+                    return 2;
+                default:
+                    return 1;
             }
         }
     }
