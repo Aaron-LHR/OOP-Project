@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class AddGroup extends Thread{
-    public String[] member;//groupname,name1,name2,name3
+    public String[] member;//groupname,(name1),name2,name3
     public Socket socket;
     public AddGroup(String[] member,Socket socket){
         this.member=member;
@@ -48,8 +48,11 @@ public class AddGroup extends Thread{
         try {
             FileOutputStream fos=new FileOutputStream(groupfile);
             OutputStreamWriter osw=new OutputStreamWriter(fos, "UTF-8");
-            for(int i=1;i<member.length;i++){
-                osw.write(member[i]+" ");
+            String tmp=member[1].replace("(","");
+            tmp=tmp.replace(")","");//群主去括号存储
+            osw.write(tmp);
+            for(int i=2;i<member.length;i++){
+                osw.write(" "+member[i]);
             }
             osw.close();
             out.writeUTF("@"+member[0]+member[1]+"@102@0");

@@ -1,15 +1,16 @@
 package Server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Control extends Thread{
     Socket socket;
-    public Control(Socket socket){
+    String username;
+    public Control(String username,Socket socket){
+        this.username=username;
         this.socket=socket;
     }
     @Override
@@ -80,7 +81,7 @@ public class Control extends Thread{
                     }
                 }
 
-                if (buff.indexOf("##ADDGROUP##")==0){//创建群聊：##ADDGROUP##groupname##name1##name2##name3
+                if (buff.indexOf("##ADDGROUP##")==0){//创建群聊：##ADDGROUP##groupname##(name1)##name2##name3
                     buff=buff.substring(12);
                     String[] tmp=buff.split("##");
                     new AddGroup(tmp,socket).start();
@@ -96,9 +97,14 @@ public class Control extends Thread{
                 }
 
                 if (buff.indexOf("##LIST")==0){//在线列表：##LIST
-                    int t=Server.online.size();
+                    List<String> list = searchGroup(username);
+                    int t=Server.online.size()+list.size();//在线人数和群的个数之和
                     out.writeUTF("@"+t+"@105@0");
                     for (String i:Server.online.keySet()){
+                        out.writeUTF(i);
+                    }
+
+                    for (String i:list){
                         out.writeUTF(i);
                     }
                 }
@@ -109,5 +115,28 @@ public class Control extends Thread{
 
 
         }
+    }
+    public static List<String> searchGroup(String name){//返回该成员所在的所有群名
+        List<String> list=new ArrayList<>();
+        File file = new File("Group/");
+        File[] fs = file.listFiles();
+        for(File f:fs){
+            if(!f.isDirectory()) {
+                try {
+                    FileInputStream fi=new FileInputStream(f);
+                    InputStreamReader isr=new InputStreamReader(fi,"UTF_8");
+                    BufferedReader br=new BufferedReader(isr);
+                    String[] s=br.readLine().split(" ");
+                    for (String i:s){
+                        if (i.equals(name))
+                            list.add(f.getName());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        return list;
     }
 }
