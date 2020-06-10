@@ -26,13 +26,14 @@ public class chatRoom extends JFrame implements ActionListener {
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
     JScrollPane txtScroll, txtScr, listScroll;
     JComboBox fontName, fontSize, fontStyle, fontColor, fontBackColor;
     JList onlineList;
+    JFileChooser fileChooser;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -523,6 +524,26 @@ public class chatRoom extends JFrame implements ActionListener {
             btnRmv.setFont(new Font("宋体", 0, 12));
             btnRmv.setBounds(680, 535, 80, 30);
 
+            btnImg = new JButton("表情");
+            btnImg.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fileChooser = new JFileChooser();
+                    File f = new File("./src");
+                    String s = f.getPath() + "/Icon";
+
+                    fileChooser.setCurrentDirectory(new File(s));
+                    fileChooser.showOpenDialog(null);
+                    try {
+                        insertIcon(fileChooser.getSelectedFile());
+                    } catch (BadLocationException badLocationException) {
+                        badLocationException.printStackTrace();
+                    }
+                }
+            });
+            btnImg.setFont(new Font("宋体", 0, 12));
+            btnImg.setBounds(595, 535, 80, 30);
+
             // 编辑信息区
             txtMsg = new JTextArea();
             txtMsg.setLineWrap(true); // 激活自动换行功能
@@ -563,6 +584,7 @@ public class chatRoom extends JFrame implements ActionListener {
 
             add(btnRmv);
             add(btnSmt);
+            add(btnImg);
 
             // 设置界面可见
             setVisible(true);
@@ -795,6 +817,20 @@ public class chatRoom extends JFrame implements ActionListener {
 
     public void popGrpChat() {
         diaGrpChat = new groupChat(chatRoomFrame);
+    }
+
+    public void insertIcon(File file) throws BadLocationException {
+        if (file != null) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+            String s1 = df.format(new Date()) + "  " + strName + "\n";
+            FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
+            doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
+        }
+
+        txtRcd.setCaretPosition(doc.getLength());
+        txtRcd.insertIcon(new ImageIcon(file.getPath()));
+        FontAttrib attrib = new FontAttrib();
+        doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
 
     @Override
