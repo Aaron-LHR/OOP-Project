@@ -10,12 +10,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class bla {
     public static void main(String[] args) {
-        String[] s= {"111","222"};//群成员列表
-        String tmp1="@"+s.length+"@107@0@"+s[0];
-        int cnt=s.length;
-        for (int i=1;i<cnt;i++){
-            tmp1=tmp1+"#"+s[i];
+        List<String >tmp=new ArrayList<>();
+        String username="333";
+        tmp.add("111 ddd 333 vvv aaa ddssd333                     ");
+        String[] ss=tmp.get(0).split("\\s+");
+        String k="";
+        for (int i=0;i<ss.length;i++){
+            if (!ss[i].equals(username)) k=k+ss[i]+" ";
         }
-        System.out.println(tmp1);
+        System.out.println(k);
     }
 }
