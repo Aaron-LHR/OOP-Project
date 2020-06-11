@@ -252,7 +252,7 @@ public class Client {
     }
 
     public boolean exitGroup(String groupName) throws IOException, InterruptedException {
-        dos.writeUTF("");
+        dos.writeUTF("##QUITGROUP##" + groupName);
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();
