@@ -135,6 +135,17 @@ public class ReceiveThread implements Runnable {
                                     break;
                             }
                             break;
+                        case "106":
+                            switch (output[3]) {
+                                case "0":
+                                    flag.exitGroup=0;
+                                    new Thread(new SendThread(chatRoom)).start();
+                                    break;
+                                case "1":
+                                    flag.exitGroup=1;
+                                    break;
+                            }
+                            break;
                         case "200":
                             if (output[1].equals(flag.curToUsername)) {
                                 String[] font = output[4].split("#");

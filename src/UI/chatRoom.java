@@ -295,6 +295,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     List<String> cl = onlineList.getSelectedValuesList();
                     if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) != '群') {    //私聊
                         popWindows(cl.get(0) + "私聊", "会话邀请");
+                        btnDel.setVisible(false);
                         toUsername = cl.get(0);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
@@ -338,9 +339,11 @@ public class chatRoom extends JFrame implements ActionListener {
                             String groupName = popGrpChat();
                             if (client.createGroup(groupName, Client.getUsername(), names)) {
                                 popWindows(s + "参与会话", "会话邀请");
+                                btnDel.setVisible(true);
                             }
                             else {
                                 popWindows("群聊已存在，进入群聊", "会话邀请");
+                                btnDel.setVisible(true);
                                 toUsername = "群：" + groupName + "(" + Client.getUsername() + ")";
                                 synchronized (runFlag) {
                                     runFlag.setCurToUsername(toUsername);
@@ -364,6 +367,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     }
                     else if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) == '群') {   //进入群聊
                         toUsername = cl.get(0);
+                        btnDel.setVisible(true);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
                         }
@@ -544,11 +548,15 @@ public class chatRoom extends JFrame implements ActionListener {
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
 
-            btnDel = new JButton("删除");
+            btnDel = new JButton("退出群聊");
             btnDel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    try {
+                        client.exitGroup(toUsername);
+                    } catch (IOException | InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             btnDel.setFont(new Font("宋体", 0, 12));
@@ -595,6 +603,8 @@ public class chatRoom extends JFrame implements ActionListener {
             add(btnRmv);
             add(btnSmt);
             add(btnImg);
+            add(btnDel);
+            btnDel.setVisible(false);
 
             // 设置界面可见
             setVisible(true);

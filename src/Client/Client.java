@@ -250,4 +250,23 @@ public class Client {
             }
         }
     }
+
+    public boolean exitGroup(String groupName) throws IOException, InterruptedException {
+        dos.writeUTF("");
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            if (runFlag.exitGroup == 0) {
+                System.out.println("退出群聊成功");
+                runFlag.modify = false;
+                return true;
+            }
+            else{
+                System.out.println("退出群聊失败");
+                runFlag.modify = false;
+                return false;
+            }
+        }
+    }
 }

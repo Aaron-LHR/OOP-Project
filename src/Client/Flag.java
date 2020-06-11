@@ -16,6 +16,7 @@ public class Flag {
     int activateGroup;
     int sendGroupMessage;
     int onlineListFlag;
+    int exitGroup;
     String[] onlineList;
     String curToUsername;
     String privateContent;
