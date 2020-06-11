@@ -34,14 +34,21 @@ public class DelGroup extends Thread{
             FileInputStream fi=new FileInputStream(f);
             InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
             BufferedReader br=new BufferedReader(isr);
-            FileOutputStream fos=new FileOutputStream(f,false);//重新写一遍文件
-            OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-            BufferedWriter bw = new BufferedWriter(osw);
             while ((t=br.readLine())!=null){//读入所有文件
                 tmp.add(t);
             }
-            tmp.add(0,tmp.get(0).replace(username,""));
+            String[] ss=tmp.get(0).split("\\s+");
+            String k="";
+            for (int i=0;i<ss.length;i++){
+                if (!ss[i].equals(username)) k=k+ss[i]+" ";
+            }
+
+            tmp.add(0,k);
             tmp.remove(1);
+
+            FileOutputStream fos=new FileOutputStream(f,false);//重新写一遍文件
+            OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             for (String s:tmp){
                 bw.write(s);
                 bw.newLine();
