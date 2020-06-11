@@ -1,5 +1,6 @@
 package src.UI;
 
+import com.vdurmont.emoji.Emoji;
 import src.Client.Client;
 import src.Client.Flag;
 import src.Client.ReceiveThread;
@@ -33,7 +34,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JScrollPane txtScroll, txtScr, listScroll;
     JComboBox fontName, fontSize, fontStyle, fontColor, fontBackColor;
     JList onlineList;
-    JFileChooser fileChooser;
+    // JFileChooser fileChooser;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -51,6 +52,10 @@ public class chatRoom extends JFrame implements ActionListener {
 
     // 群聊成员显示窗口
     groupMember grpMember;
+
+    // 表情窗口
+    emojiImgBox imgBox;
+    // emoji emojiClass;
 
     // 辅助参数
     String strName, strPwd;
@@ -537,12 +542,13 @@ public class chatRoom extends JFrame implements ActionListener {
 
             // 表情选择
             btnImg = new JButton("表情");
+            /*
             btnImg.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     fileChooser = new JFileChooser();
                     File f = new File("./src");
-                    String s = f.getPath() + "/Icon";
+                    String s = f.getPath() + "/main/java/src/Icon";
 
                     fileChooser.setCurrentDirectory(new File(s));
                     fileChooser.showOpenDialog(null);
@@ -551,6 +557,15 @@ public class chatRoom extends JFrame implements ActionListener {
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
+                }
+            });
+
+             */
+
+            btnImg.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    popImgBox();
                 }
             });
             btnImg.setFont(new Font("宋体", 0, 12));
@@ -741,6 +756,13 @@ public class chatRoom extends JFrame implements ActionListener {
         submitText(att, name);
     }
 
+    /*
+    public void imgTransfer(String name, String emoji) {
+
+    }
+
+     */
+
     public FontAttrib getFontAttrib() {
         FontAttrib att = new FontAttrib();
 
@@ -804,6 +826,11 @@ public class chatRoom extends JFrame implements ActionListener {
     // 弹出提示信息
     public void popWindows(String strWarning, String strTitle) {
         JOptionPane.showMessageDialog(this, strWarning, strTitle, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // 弹出表情包
+    public void popImgBox() {
+        imgBox = new emojiImgBox(chatRoomFrame, txtMsg, emoji.getEmojiUnicode());
     }
 
     // 弹出成员列表
@@ -886,6 +913,7 @@ public class chatRoom extends JFrame implements ActionListener {
         return diaGrpChat.GroupName;
     }
 
+    /*
     public void insertIcon(File file) throws BadLocationException {
         if (file != null) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
@@ -899,6 +927,8 @@ public class chatRoom extends JFrame implements ActionListener {
         FontAttrib attrib = new FontAttrib();
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
+
+     */
 
     @Override
     public void actionPerformed(ActionEvent e) {}
