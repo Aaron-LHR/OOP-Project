@@ -143,7 +143,7 @@ public class chatRoom extends JFrame implements ActionListener {
         diaLgnFrame.getContentPane().add(btnRgst);
         diaLgnFrame.getContentPane().add(btnExit);
 
-        diaLgnFrame.setSize(250, 150);
+        diaLgnFrame.setSize(250, 170);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frame = diaLgnFrame.getSize();
         if (frame.width > screen.width) {
@@ -161,7 +161,7 @@ public class chatRoom extends JFrame implements ActionListener {
         if (flag) {
 
             // 聊天室界面
-            this.setSize(850, 700);
+            this.setSize(850, 710);
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setResizable(false);
 
@@ -189,7 +189,7 @@ public class chatRoom extends JFrame implements ActionListener {
             // 端口
             lbPort = new JLabel("端口:");
             lbPort.setFont(new Font("宋体", 0, 14));
-            lbPort.setBounds(10, 27, 35, 20);
+            lbPort.setBounds(10, 27, 50, 20);
 
             txtPort = new JTextField();
             txtPort.setText("1111");
@@ -197,12 +197,12 @@ public class chatRoom extends JFrame implements ActionListener {
             txtPort.setBackground(Color.WHITE);
             txtPort.setFont(new Font("宋体", 0, 12));
             txtPort.setEditable(false);
-            txtPort.setBounds(55, 25, 80, 30);
+            txtPort.setBounds(70, 25, 80, 30);
 
             // 服务器IP
             lbIP = new JLabel("服务器IP:");
             lbIP.setFont(new Font("宋体", 0, 14));
-            lbIP.setBounds(155, 27, 60, 20);
+            lbIP.setBounds(170, 27, 90, 20);
 
             txtIP = new JTextField();
             txtIP.setText("127.0.0.1");
@@ -210,12 +210,12 @@ public class chatRoom extends JFrame implements ActionListener {
             txtIP.setBackground(Color.WHITE);
             txtIP.setFont(new Font("宋体", 0, 12));
             txtIP.setEditable(false);
-            txtIP.setBounds(225, 25, 80, 30);
+            txtIP.setBounds(270, 25, 80, 30);
 
             // 姓名
             lbName = new JLabel("姓名:");
             lbName.setFont(new Font("宋体", 0, 14));
-            lbName.setBounds(325, 27, 35, 20);
+            lbName.setBounds(370, 27, 50, 20);
 
             txtName = new JTextField(10);
             txtName.setText(strName);
@@ -223,7 +223,7 @@ public class chatRoom extends JFrame implements ActionListener {
             txtName.setBackground(Color.WHITE);
             txtName.setFont(new Font("宋体", 0, 12));
             txtName.setEditable(false);
-            txtName.setBounds(370, 25, 80, 30);
+            txtName.setBounds(430, 25, 80, 30);
 
             // 退出按钮
             btnExt = new JButton("退出");
