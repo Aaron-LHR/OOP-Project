@@ -26,7 +26,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg, btnDel;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
@@ -543,6 +543,16 @@ public class chatRoom extends JFrame implements ActionListener {
             });
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
+
+            btnDel = new JButton("删除");
+            btnDel.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            btnDel.setFont(new Font("宋体", 0, 12));
+            btnDel.setBounds(510, 535, 80, 30);
 
             // 编辑信息区
             txtMsg = new JTextArea();
