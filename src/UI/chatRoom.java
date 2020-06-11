@@ -335,13 +335,13 @@ public class chatRoom extends JFrame implements ActionListener {
                             }
                         }
                         try {
-                            popGrpChat();
-                            if (client.createGroup("群聊", Client.getUsername(), names)) {
+                            String groupName = popGrpChat();
+                            if (client.createGroup(groupName, Client.getUsername(), names)) {
                                 popWindows(s + "参与会话", "会话邀请");
                             }
                             else {
                                 popWindows("群聊已存在，进入群聊", "会话邀请");
-                                toUsername = "群：群聊(" + Client.getUsername() + ")";
+                                toUsername = "群：" + groupName + "(" + Client.getUsername() + ")";
                                 synchronized (runFlag) {
                                     runFlag.setCurToUsername(toUsername);
                                 }
@@ -815,8 +815,9 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
-    public void popGrpChat() {
+    public String popGrpChat() {
         diaGrpChat = new groupChat(chatRoomFrame);
+        return diaGrpChat.GroupName;
     }
 
     public void insertIcon(File file) throws BadLocationException {

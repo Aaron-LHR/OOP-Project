@@ -43,6 +43,9 @@ public class ReceiveThread implements Runnable {
                                 case "1":
                                     flag.login=1;
                                     break;
+                                case "2":
+                                    flag.login=2;
+                                    break;
                             }
                             break;
                         case "1":

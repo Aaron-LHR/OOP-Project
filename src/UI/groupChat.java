@@ -11,6 +11,7 @@ public class groupChat {
     JLabel lbGrpChat;
     JTextField txtGrpChat;
     JButton btnConfirm, btnCancel;
+    String GroupName;
 
     public groupChat(JFrame room) {
         diaGrpChatFrame = new JDialog(room, "加入群聊", true);
@@ -22,7 +23,7 @@ public class groupChat {
         btnConfirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String s = txtGrpChat.getText();
+                GroupName = txtGrpChat.getText();
                 diaGrpChatFrame.dispose();
             }
         });
