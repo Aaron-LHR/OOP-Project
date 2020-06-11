@@ -7,6 +7,7 @@ import src.Client.ReceiveThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileView;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JScrollPane txtScroll, txtScr, listScroll;
     JComboBox fontName, fontSize, fontStyle, fontColor, fontBackColor;
     JList onlineList;
-    // JFileChooser fileChooser;
+    JFileChooser fileChooser;
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
@@ -54,7 +55,7 @@ public class chatRoom extends JFrame implements ActionListener {
     groupMember grpMember;
 
     // 表情窗口
-    emojiImgBox imgBox;
+    // emojiImgBox imgBox;
     // emoji emojiClass;
 
     // 辅助参数
@@ -542,13 +543,34 @@ public class chatRoom extends JFrame implements ActionListener {
 
             // 表情选择
             btnImg = new JButton("表情");
-            /*
+
             btnImg.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     fileChooser = new JFileChooser();
                     File f = new File("./src");
                     String s = f.getPath() + "/main/java/src/Icon";
+
+                    // fileChooser.setAccessory(new ImagePreviewer(fileChooser));
+                    fileChooser.setFileView(new FileView() {
+                        @Override
+                        public ImageIcon getIcon(File f) {
+                            ImageIcon icon = new ImageIcon(f.getPath());
+                            return icon;
+                        }
+
+                        /*
+                        @Override
+                        public String getName(File f) {
+                            String s = f.getName();
+                            if (s.endsWith(".gif")) {
+                                return s.substring(0, s.indexOf(".gif")) + ".png";
+                            }
+                            else return s;
+                        }
+
+                         */
+                    });
 
                     fileChooser.setCurrentDirectory(new File(s));
                     fileChooser.showOpenDialog(null);
@@ -560,14 +582,15 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
 
-             */
-
+            /*
             btnImg.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     popImgBox();
                 }
             });
+
+             */
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
 
@@ -828,10 +851,12 @@ public class chatRoom extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, strWarning, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // 弹出表情包
+    /* 弹出表情包
     public void popImgBox() {
         imgBox = new emojiImgBox(chatRoomFrame, txtMsg, emoji.getEmojiUnicode());
     }
+
+     */
 
     // 弹出成员列表
     public void popGrpMember() throws IOException, InterruptedException {
@@ -913,7 +938,7 @@ public class chatRoom extends JFrame implements ActionListener {
         return diaGrpChat.GroupName;
     }
 
-    /*
+
     public void insertIcon(File file) throws BadLocationException {
         if (file != null) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
@@ -927,8 +952,6 @@ public class chatRoom extends JFrame implements ActionListener {
         FontAttrib attrib = new FontAttrib();
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
-
-     */
 
     @Override
     public void actionPerformed(ActionEvent e) {}
@@ -950,3 +973,11 @@ public class chatRoom extends JFrame implements ActionListener {
 
 }
 
+/*
+class ImagePreviewer extends JLabel {
+    public ImagePreviewer(JFileChooser chooser) {
+        ImageIcon icon =
+    }
+}
+
+ */
