@@ -91,7 +91,7 @@ public class Client {
     }
 
     public static void saveRecord(String localUsername, String toUsername, String content, String font, boolean direction) throws IOException { //direction==true:send   direction==false:receive
-        FileOutputStream fileOutputStream = new FileOutputStream(localUsername + "##" + toUsername + "##Record", true);
+        FileOutputStream fileOutputStream = new FileOutputStream("localRecord/" + localUsername + "##" + toUsername + "##Record", true);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         String s;
         if (direction) {
@@ -106,7 +106,7 @@ public class Client {
     }
 
     public static List<String> readRecord(String localUsername, String toUsername) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(localUsername + "##" + toUsername + "##Record");
+        FileInputStream fileInputStream = new FileInputStream("localRecord/" + localUsername + "##" + toUsername + "##Record");
         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
         int c, i = 0;
         char[] line = new char[1024];
