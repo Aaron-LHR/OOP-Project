@@ -113,6 +113,22 @@ public class Control extends Thread{
                 if (buff.indexOf("##QUITGROUP##")==0){
                     new DelGroup(username,buff.substring(13)).start();
                 }
+                if (buff.indexOf("##GList##")==0){
+                    String tmp=buff.substring(9);
+                    File f=new File("Group/"+tmp);
+                    FileInputStream fi=new FileInputStream(f);
+                    InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
+                    BufferedReader br=new BufferedReader(isr);
+                    Server.groupLock.get(f.getName()).readLock().lock();
+                    String[] s=br.readLine().split(" ");//群成员列表
+                    Server.groupLock.get(f.getName()).readLock().unlock();
+                    String tmp1="@"+s.length+"@107@0@"+s[0];
+                    int cnt=s.length;
+                    for (int i=1;i<cnt;i++){
+                        tmp1=tmp1+"#"+s[i];
+                    }
+                    out.writeUTF(tmp1);
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
