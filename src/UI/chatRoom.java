@@ -26,7 +26,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg, btnDel;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg, btnDel, btnMember;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
@@ -48,6 +48,9 @@ public class chatRoom extends JFrame implements ActionListener {
 
     // 搜索群聊窗口
     groupChat diaGrpChat;
+
+    // 群聊成员显示窗口
+    groupMember grpMember;
 
     // 辅助参数
     String strName, strPwd;
@@ -524,6 +527,7 @@ public class chatRoom extends JFrame implements ActionListener {
             btnRmv.setFont(new Font("宋体", 0, 12));
             btnRmv.setBounds(680, 535, 80, 30);
 
+            // 表情选择
             btnImg = new JButton("表情");
             btnImg.addActionListener(new ActionListener() {
                 @Override
@@ -544,6 +548,7 @@ public class chatRoom extends JFrame implements ActionListener {
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
 
+            // 删除
             btnDel = new JButton("删除");
             btnDel.addActionListener(new ActionListener() {
                 @Override
@@ -553,6 +558,17 @@ public class chatRoom extends JFrame implements ActionListener {
             });
             btnDel.setFont(new Font("宋体", 0, 12));
             btnDel.setBounds(510, 535, 80, 30);
+
+            // 成员列表
+            btnMember = new JButton("成员");
+            btnMember.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    popGrpMember();
+                }
+            });
+            btnMember.setFont(new Font("宋体", 0, 12));
+            btnMember.setBounds(425, 535, 80, 30);
 
             // 编辑信息区
             txtMsg = new JTextArea();
@@ -595,6 +611,8 @@ public class chatRoom extends JFrame implements ActionListener {
             add(btnRmv);
             add(btnSmt);
             add(btnImg);
+            add(btnDel);
+            add(btnMember);
 
             // 设置界面可见
             setVisible(true);
@@ -758,6 +776,13 @@ public class chatRoom extends JFrame implements ActionListener {
     public void popWindows(String strWarning, String strTitle) {
         JOptionPane.showMessageDialog(this, strWarning, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    // 弹出成员列表
+    public void popGrpMember() {
+        grpMember = new groupMember(chatRoomFrame, getMemList());
+    }
+
+    public String[] getMemList() {}
 
     public String[] getOnlineList() throws IOException, InterruptedException {
         return client.getOnlineList();
