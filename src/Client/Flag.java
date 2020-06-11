@@ -20,6 +20,7 @@ public class Flag {
     String[] onlineList;
     String curToUsername;
     String privateContent;
+    String[] groupMember;
 
     public boolean isModify() {
         return modify;
@@ -75,5 +76,17 @@ public class Flag {
 
     public void setCurToUsername(String curToUsername) {
         this.curToUsername = curToUsername;
+    }
+
+    public static Flag getFlag() {
+        return flag;
+    }
+
+    public int getExitGroup() {
+        return exitGroup;
+    }
+
+    public String[] getGroupMember() {
+        return groupMember;
     }
 }

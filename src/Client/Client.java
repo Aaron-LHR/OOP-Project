@@ -269,4 +269,15 @@ public class Client {
             }
         }
     }
+
+    public String[] getGroupMembers(String groupName) throws IOException, InterruptedException {
+        dos.writeUTF("");
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            runFlag.modify = false;
+            return runFlag.getGroupMember();
+        }
+    }
 }

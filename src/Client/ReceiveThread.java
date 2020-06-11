@@ -118,7 +118,7 @@ public class ReceiveThread implements Runnable {
                                     flag.sendGroupMessage=1;
                                     break;
                                 case "2":
-                                    flag.sendGroupMessage=1;
+                                    flag.sendGroupMessage=2;
                                     break;
                             }
                             break;
@@ -139,10 +139,16 @@ public class ReceiveThread implements Runnable {
                             switch (output[3]) {
                                 case "0":
                                     flag.exitGroup=0;
-                                    new Thread(new SendThread(chatRoom)).start();
                                     break;
                                 case "1":
                                     flag.exitGroup=1;
+                                    break;
+                            }
+                            break;
+                        case "107":
+                            switch (output[3]) {
+                                case "0":
+                                    flag.groupMember = output[4].split("#");
                                     break;
                             }
                             break;
