@@ -110,7 +110,9 @@ public class Control extends Thread{
                         out.writeUTF(i);
                     }
                 }
-
+                if (buff.indexOf("##QUITGROUP##")==0){
+                    new DelGroup(username,buff.substring(13)).start();
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -128,11 +130,13 @@ public class Control extends Thread{
                     FileInputStream fi=new FileInputStream(f);
                     InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
                     BufferedReader br=new BufferedReader(isr);
+                    Server.groupLock.get(f.getName()).readLock().lock();
                     String[] s=br.readLine().split(" ");
                     for (String i:s){
                         if (i.equals(name))
                             list.add(f.getName());
                     }
+                    Server.groupLock.get(f.getName()).readLock().unlock();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
