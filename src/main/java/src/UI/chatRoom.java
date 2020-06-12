@@ -582,7 +582,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     try {
                         if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
                             if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "")) {
-                                if (val == JFileChooser.APPROVE_OPTION) insertIcon(file);
+                                if (val == JFileChooser.APPROVE_OPTION) insertIcon(file, strName);
                             }
                             else {
                                 popWindows("对方不在线", "提示");
@@ -816,8 +816,12 @@ public class chatRoom extends JFrame implements ActionListener {
         submitText(att, name);
     }
 
-    public void imgTransfer(String name, String emoji) {
+    public void imgTransfer(String name, String imgName) throws BadLocationException {
+        File f = new File("./src");
+        String s = f.getPath() + "/src/main/java/src/Icon/";
+        File file = new File(s + imgName);
 
+        insertIcon(file, name);
     }
 
     public FontAttrib getFontAttrib() {
@@ -973,7 +977,7 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
 
-    public void insertIcon(File file) throws BadLocationException {
+    public void insertIcon(File file, String usrname) throws BadLocationException {
         File f = new File("./src");
         String s = f.getPath() + "/main/java/src/Icon";
         String path = "./" + file.getPath().substring(file.getPath().indexOf("src"), file.getPath().lastIndexOf("/"));
@@ -981,7 +985,7 @@ public class chatRoom extends JFrame implements ActionListener {
         if (!path.equals(s)) return;
         else if (file != null) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-            String s1 = df.format(new Date()) + "  " + strName + "\n";
+            String s1 = df.format(new Date()) + "  " + usrname + "\n";
             FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
             doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
         }
