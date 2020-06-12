@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Send extends Thread {//@fromUser@content
+public class Send{//@fromUser@content
     private String toUser;
     private String fromUser;
     private String content;
@@ -18,9 +18,7 @@ public class Send extends Thread {//@fromUser@content
         this.socket=socket;
         this.font=font;
     }
-    @Override
-    public void run() {
-        super.run();
+    public void act() {
         try {
             DataOutputStream out=new DataOutputStream(socket.getOutputStream());
             DataInputStream in=new DataInputStream(socket.getInputStream());
@@ -34,7 +32,9 @@ public class Send extends Thread {//@fromUser@content
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
                 out.writeUTF("@"+toUser+"@101@0");
                 String msg="@"+fromUser+"@200@"+content+"@"+font;
-                sout.writeUTF(msg);
+                synchronized (send){
+                    sout.writeUTF(msg);
+                }
                 System.out.println("发送至"+toUser+":"+msg);
                 sout.flush();
                 out.flush();

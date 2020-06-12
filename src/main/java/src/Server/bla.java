@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class bla {
     public static void main(String[] args) {
+        System.out.println("##FILE##123".substring(8));
         List<String >tmp=new ArrayList<>();
         String username="333";
         tmp.add("111 ddd 333 vvv aaa ddssd333                     ");

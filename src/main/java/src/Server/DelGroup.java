@@ -6,16 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelGroup extends Thread{
+public class DelGroup{
     String username;
     String groupname;
     public DelGroup(String username,String groupname){
         this.username=username;
         this.groupname=groupname;
     }
-    @Override
-    public void run() {
-        super.run();
+
+    public void act(){
         try {
             List<String> list=Control.searchGroup(username);
             Socket socket=Server.online.get(username);

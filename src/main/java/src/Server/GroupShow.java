@@ -6,16 +6,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupShow extends Thread{
+public class GroupShow{
     Socket socket;
     String name;
     public GroupShow(String name,Socket socket){//##GROUPSHOW##群名+群主
         this.socket=socket;
         this.name=name;
     }
-    @Override
-    public void run() {
-        super.run();
+    public void act() {
         try {
             OutputStream outputStream=socket.getOutputStream();
             DataOutputStream out = new DataOutputStream(outputStream);
