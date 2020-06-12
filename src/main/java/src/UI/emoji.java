@@ -30,9 +30,11 @@ public class emoji {
         }
 
          */
-        for (Emoji emoji : EmojiManager.getAll()) {
-            System.out.println(emoji.getUnicode());
-        }
+//        for (Emoji emoji : EmojiManager.getAll()) {
+//            System.out.println(emoji.getUnicode());
+//        }
+
+        System.out.println(EmojiParser.parseToUnicode(":grinning:"));
     }
 
 }

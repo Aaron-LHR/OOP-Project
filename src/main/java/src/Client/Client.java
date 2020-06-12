@@ -271,13 +271,39 @@ public class Client {
     }
 
     public String[] getGroupMembers(String groupName) throws IOException, InterruptedException {
-        dos.writeUTF("");
+        dos.writeUTF("##GList##" + groupName);
         synchronized (runFlag) {
             while (!runFlag.modify) {
                 runFlag.wait();
             }
             runFlag.modify = false;
             return runFlag.getGroupMember();
+        }
+    }
+
+    public boolean sendFile(File file) throws IOException, InterruptedException {
+        dos.writeUTF("");
+        FileInputStream fis = new FileInputStream(file);
+        byte[] bytes = new byte[1024];
+        int length = 0;
+        while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
+            dos.write(bytes, 0, length);
+            dos.flush();
+        }
+        synchronized (runFlag) {
+            while (!runFlag.modify) {
+                runFlag.wait();
+            }
+            if (runFlag.sendFile == 0) {
+                System.out.println("发送文件成功");
+                runFlag.modify = false;
+                return true;
+            }
+            else{
+                System.out.println("发送文件失败");
+                runFlag.modify = false;
+                return false;
+            }
         }
     }
 }

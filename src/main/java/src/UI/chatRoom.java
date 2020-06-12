@@ -1,6 +1,7 @@
 package src.UI;
 
 import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiParser;
 import src.Client.Client;
 import src.Client.Flag;
 import src.Client.ReceiveThread;
@@ -311,6 +312,8 @@ public class chatRoom extends JFrame implements ActionListener {
                             runFlag.setCurToUsername(toUsername);
                         }
                         txtRcd.setText("");
+//                        txtRcd.setText(EmojiParser.parseToUnicode(":grinning:"));
+                        System.out.println(EmojiParser.parseToUnicode(":grinning:"));
                         try {
                             infoReminder(toUsername, false);
                         } catch (IOException | InterruptedException ex) {
@@ -576,6 +579,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     fileChooser.showOpenDialog(null);
                     try {
                         insertIcon(fileChooser.getSelectedFile());
+                        System.out.println(fileChooser.getSelectedFile().getName());
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
