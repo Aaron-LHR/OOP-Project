@@ -287,14 +287,15 @@ public class Client {
         }
     }
 
-    public boolean sendFile(String username, File file) throws IOException, InterruptedException {
+    public boolean sendFile(String ToUsername, File file) throws IOException, InterruptedException {
         long n = (long) Math.ceil(file.length() / 1024.0);
-        dos.writeUTF("##FILE##" + username + "##" + file.getName() + "##" + n);
+        dos.writeUTF("##FILE##" + ToUsername + "##" + file.getName() + "##" + n);
         FileInputStream fis = new FileInputStream(file);
         byte[] bytes = new byte[1024];
         int length = 0;
         while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
             dos.write(bytes, 0, length);
+            System.out.println(bytes.toString());
             dos.flush();
         }
         synchronized (runFlag) {
@@ -303,6 +304,7 @@ public class Client {
             }
             if (runFlag.sendFile == 0) {
                 System.out.println("发送文件成功");
+                saveRecord(username, ToUsername, "发送文件:" + file.getName(), "宋体#0#12#黑色#无色", true);
                 runFlag.modify = false;
                 return true;
             }

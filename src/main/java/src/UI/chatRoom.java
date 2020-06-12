@@ -309,6 +309,7 @@ public class chatRoom extends JFrame implements ActionListener {
                         popWindows(cl.get(0) + "私聊", "会话邀请");
                         btnDel.setVisible(false);
                         btnMember.setVisible(false);
+                        btnFile.setVisible(true);
                         toUsername = cl.get(0);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
@@ -361,11 +362,13 @@ public class chatRoom extends JFrame implements ActionListener {
                                 popWindows(s + "参与会话", "会话邀请");
                                 btnDel.setVisible(true);
                                 btnMember.setVisible(true);
+                                btnFile.setVisible(false);
                             }
                             else {
                                 popWindows("群聊已存在，进入群聊", "会话邀请");
                                 btnDel.setVisible(true);
                                 btnMember.setVisible(true);
+                                btnFile.setVisible(false);
                                 toUsername = "群：" + groupName + "(" + Client.getUsername() + ")";
                                 synchronized (runFlag) {
                                     runFlag.setCurToUsername(toUsername);
@@ -391,6 +394,7 @@ public class chatRoom extends JFrame implements ActionListener {
                         toUsername = cl.get(0);
                         btnDel.setVisible(true);
                         btnMember.setVisible(true);
+                        btnFile.setVisible(false);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
                         }
@@ -729,6 +733,7 @@ public class chatRoom extends JFrame implements ActionListener {
             add(btnMember);
             btnDel.setVisible(false);
             btnMember.setVisible(false);
+            btnFile.setVisible(false);
 
             // 设置界面可见
             setVisible(true);
@@ -818,6 +823,7 @@ public class chatRoom extends JFrame implements ActionListener {
         else if (color.equals("蓝色")) c1 = Color.BLUE;
         else if (color.equals("黄色")) c1 = Color.YELLOW;
         else if (color.equals("绿色")) c1 = Color.GREEN;
+        else c1 = Color.BLACK;
 
         if (backCol.equals("无色")) c2 = Color.WHITE;
         else if (backCol.equals("灰色")) c2 = new Color(200, 200, 200);
@@ -825,6 +831,7 @@ public class chatRoom extends JFrame implements ActionListener {
         else if (backCol.equals("淡蓝")) c2 = new Color(200, 200, 255);
         else if (backCol.equals("淡黄")) c2 = new Color(255, 255, 200);
         else if (backCol.equals("淡绿")) c2 = new Color(200, 255, 200);
+        else c2 = Color.WHITE;
 
         FontAttrib att = new FontAttrib(msg, font_Name, style, size, c1, c2);
 
