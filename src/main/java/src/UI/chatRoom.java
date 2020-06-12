@@ -682,6 +682,9 @@ public class chatRoom extends JFrame implements ActionListener {
         try {
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
+            if (username.contains(" ")) {
+                popWindows("用户名不能包含空格", "登录");
+            }
             switch (client.Login(username, password)) {
                 case 0:
                     popWindows("登录成功", "登录");

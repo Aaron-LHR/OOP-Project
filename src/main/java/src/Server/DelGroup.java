@@ -24,12 +24,10 @@ public class DelGroup extends Thread{
             File f=new File("Group/"+groupname);
             List<String> tmp=new ArrayList<>();//用于暂时保存群文件
             String t;
-
             if (!list.contains(groupname)) {
                 out.writeUTF("@" + groupname + "@106@1");//用户没有未加入该群
                 return;
             }
-
             Server.groupLock.get(groupname).writeLock().lock();
             FileInputStream fi=new FileInputStream(f);
             InputStreamReader isr=new InputStreamReader(fi, StandardCharsets.UTF_8);
