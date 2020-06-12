@@ -156,9 +156,10 @@ public class ReceiveThread implements Runnable {
                             }
                             break;
                         case "200":
+                            flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("")) {
-//                                    chatRoom.insertIcon(new File("src/main/java/src/Icon" + output[3].substring(3, output[3].length()-3)));
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("emoji")) {
+                                    chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
                                 }
                                 else {
                                     String[] font = output[4].split("#");
@@ -172,9 +173,15 @@ public class ReceiveThread implements Runnable {
                             new Thread(new SendThread(chatRoom)).start();
                             break;
                         case "201":
+                            flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                String[] font = output[5].split("#");
-                                chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("emoji")) {
+                                    chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
+                                }
+                                else {
+                                    String[] font = output[5].split("#");
+                                    chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                }
                             }
                             else {
                                 chatRoom.infoReminder(output[1], true);
@@ -185,7 +192,7 @@ public class ReceiveThread implements Runnable {
                     }
                     flag.notify();
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException | InterruptedException | BadLocationException e) {
                 e.printStackTrace();
             }
         }
