@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class AddGroup extends Thread{
+public class AddGroup{
     public String[] member;//groupname,(name1),name2,name3
     public Socket socket;
     public AddGroup(String[] member,Socket socket){
@@ -13,9 +13,7 @@ public class AddGroup extends Thread{
         this.socket=socket;
     }
 
-    @Override
-    public void run() {
-        super.run();
+    public void act() {
         DataOutputStream out= null;
         try {
             out = new DataOutputStream(socket.getOutputStream());

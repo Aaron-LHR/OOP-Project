@@ -2,7 +2,7 @@ package src.Server;
 import java.io.*;
 import java.net.*;
 
-public class Login extends Thread {
+public class Login{
     public String username;
     private String passwd;
     private Socket socket;
@@ -11,30 +11,28 @@ public class Login extends Thread {
         this.passwd=passwd;
         this.socket=socket;
     }
-    @Override
-    public void run() {
 
+    public void act() {
         try {
-                DataOutputStream out=new DataOutputStream(socket.getOutputStream());
-                DataInputStream in=new DataInputStream(socket.getInputStream());
-                if(Server.account.get(username)!=null&&Server.account.get(username).equals(passwd)){
-                    if (Server.online.get(username)!=null){
-                        out.writeUTF("@name@0@2");//用户已登录
-                        return;
-                    }
-                    out.writeUTF("@name@0@0");
-                    InetAddress inetAddress=socket.getInetAddress();
-                    System.out.println(username+":"+inetAddress.getHostAddress()+":online!");
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            if (Server.account.get(username) != null && Server.account.get(username).equals(passwd)) {
+                if (Server.online.get(username) != null) {
+                    out.writeUTF("@name@0@2");//用户已登录
+                    return;
+                }
+                out.writeUTF("@name@0@0");
+                InetAddress inetAddress = socket.getInetAddress();
+                System.out.println(username + ":" + inetAddress.getHostAddress() + ":online!");
 
-                    Server.online.put(username,socket);
-                }
-                else {
-                    out.writeUTF("@name@0@1");
-                    out.flush();
-                }
+                Server.online.put(username, socket);
+            } else {
+                out.writeUTF("@name@0@1");
+                out.flush();
             }
-            catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
