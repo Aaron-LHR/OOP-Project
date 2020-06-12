@@ -710,6 +710,7 @@ public class chatRoom extends JFrame implements ActionListener {
             add(btnRmv);
             add(btnSmt);
             add(btnImg);
+            add(btnFile);
             add(btnDel);
             add(btnMember);
             btnDel.setVisible(false);
