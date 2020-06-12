@@ -576,13 +576,13 @@ public class chatRoom extends JFrame implements ActionListener {
                     });
 
                     fileChooser.setCurrentDirectory(new File(s));
-                    fileChooser.showOpenDialog(null);
+                    int val = fileChooser.showOpenDialog(null);
                     File file = fileChooser.getSelectedFile();
                     System.out.println(file.getName());
                     try {
                         if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
                             if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "")) {
-                                insertIcon(file);
+                                if (val == JFileChooser.APPROVE_OPTION) insertIcon(file);
                             }
                             else {
                                 popWindows("对方不在线", "提示");
@@ -960,7 +960,12 @@ public class chatRoom extends JFrame implements ActionListener {
 
 
     public void insertIcon(File file) throws BadLocationException {
-        if (file != null) {
+        File f = new File("./src");
+        String s = f.getPath() + "/main/java/src/Icon";
+        String path = "./" + file.getPath().substring(file.getPath().indexOf("src"), file.getPath().lastIndexOf("/"));
+
+        if (!path.equals(s)) return;
+        else if (file != null) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
             String s1 = df.format(new Date()) + "  " + strName + "\n";
             FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
