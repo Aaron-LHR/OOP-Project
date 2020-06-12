@@ -8,6 +8,7 @@ import src.Client.ReceiveThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -29,7 +30,7 @@ public class chatRoom extends JFrame implements ActionListener {
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
-    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg, btnDel, btnMember;
+    JButton btnExt, btnSmt, btnRmv, btnRfrsh, btnChat, btnshift, btnImg, btnFile, btnDel, btnMember;
     JTextArea txtMsg;
     JTextPane txtRcd;
     StyledDocument doc;
@@ -546,7 +547,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
             // 表情选择
             btnImg = new JButton("表情");
-
             btnImg.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -611,6 +611,23 @@ public class chatRoom extends JFrame implements ActionListener {
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
 
+            // 文件传输
+            btnFile = new JButton("文件");
+            btnFile.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fileChooser = new JFileChooser();
+                    File dir = FileSystemView.getFileSystemView() .getHomeDirectory();
+
+                    fileChooser.setCurrentDirectory(dir);
+                    int val = fileChooser.showOpenDialog(null);
+                    if (val == JFileChooser.APPROVE_OPTION) fileTransfer(fileChooser.getSelectedFile());
+
+                }
+            });
+            btnFile.setFont(new Font("宋体", 0, 12));
+            btnFile.setBounds(510, 535, 80, 30);
+
             // 删除
             btnDel = new JButton("退出群聊");
             btnDel.addActionListener(new ActionListener() {
@@ -635,7 +652,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnDel.setFont(new Font("宋体", 0, 12));
-            btnDel.setBounds(510, 535, 80, 30);
+            btnDel.setBounds(425, 535, 80, 30);
 
             // 成员列表
             btnMember = new JButton("成员");
@@ -650,7 +667,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 }
             });
             btnMember.setFont(new Font("宋体", 0, 12));
-            btnMember.setBounds(425, 535, 80, 30);
+            btnMember.setBounds(340, 535, 80, 30);
 
             // 编辑信息区
             txtMsg = new JTextArea();
@@ -799,12 +816,9 @@ public class chatRoom extends JFrame implements ActionListener {
         submitText(att, name);
     }
 
-    /*
     public void imgTransfer(String name, String emoji) {
 
     }
-
-     */
 
     public FontAttrib getFontAttrib() {
         FontAttrib att = new FontAttrib();
@@ -976,6 +990,10 @@ public class chatRoom extends JFrame implements ActionListener {
         txtRcd.insertIcon(new ImageIcon(file.getPath()));
         FontAttrib attrib = new FontAttrib();
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
+    }
+
+    public void fileTransfer(File file) {
+
     }
 
     @Override
