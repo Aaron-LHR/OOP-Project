@@ -2,9 +2,12 @@ package src.Client;
 
 import src.UI.chatRoom;
 
+import javax.swing.text.BadLocationException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class ReceiveThread implements Runnable {
     private Client client = Client.getInstance();
@@ -154,8 +157,13 @@ public class ReceiveThread implements Runnable {
                             break;
                         case "200":
                             if (output[1].equals(flag.curToUsername)) {
-                                String[] font = output[4].split("#");
-                                chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("")) {
+//                                    chatRoom.insertIcon(new File("src/main/java/src/Icon" + output[3].substring(3, output[3].length()-3)));
+                                }
+                                else {
+                                    String[] font = output[4].split("#");
+                                    chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                }
                             }
                             else {
                                 chatRoom.infoReminder(output[1], true);

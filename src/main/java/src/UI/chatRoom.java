@@ -577,10 +577,23 @@ public class chatRoom extends JFrame implements ActionListener {
 
                     fileChooser.setCurrentDirectory(new File(s));
                     fileChooser.showOpenDialog(null);
+                    File file = fileChooser.getSelectedFile();
+                    System.out.println(file.getName());
                     try {
-                        insertIcon(fileChooser.getSelectedFile());
-                        System.out.println(fileChooser.getSelectedFile().getName());
-                    } catch (BadLocationException badLocationException) {
+                        if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
+                            if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "")) {
+                                insertIcon(file);
+                            }
+                            else {
+                                popWindows("对方不在线", "提示");
+                            }
+                        }
+                        else {  //给群聊发消息
+                            if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "")) {
+                                popWindows("群消息发送失败", "提示");
+                            }
+                        }
+                    } catch (BadLocationException | IOException | InterruptedException badLocationException) {
                         badLocationException.printStackTrace();
                     }
                 }
