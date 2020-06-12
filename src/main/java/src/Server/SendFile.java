@@ -25,15 +25,20 @@ public class SendFile {
             DataOutputStream out=new DataOutputStream(Server.online.get(toUser).getOutputStream());
             DataInputStream in=new DataInputStream(socket.getInputStream());
             synchronized (out){
-                System.out.println("@"+fromUser+"@202@"+filename+"@"+len);
+                out.writeUTF("@"+fromUser+"@202@"+filename+"@"+len);
                 for (int i=0;i<len;i++){
                     length=in.read(bytes,0,bytes.length);
                     out.write(bytes,0,length);
                 }
-            }
 
+            }
+            new DataOutputStream(socket.getOutputStream()).writeUTF("@"+filename+"@108@0");
         }catch (Exception e){
             e.printStackTrace();
+            try {
+                new DataOutputStream(socket.getOutputStream()).writeUTF("@"+filename+"@108@1");
+            }catch (Exception e1){}
+
         }
 
     }
