@@ -43,7 +43,7 @@ public class groupMember {
         diaGrpMember.getContentPane().add(grpMemScroll);
         diaGrpMember.getContentPane().add(btnBack);
 
-        diaGrpMember.setSize(200, 200);
+        diaGrpMember.setSize(210, 210);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension fra = diaGrpMember.getSize();
         if (fra.width > screen.width) {
