@@ -22,7 +22,7 @@ public class Client {
 
     static {
         try {
-            client = new Client("localhost",1111);
+            client = new Client("39.97.126.242",1111);
         } catch (IOException e) {
             e.printStackTrace();
         }

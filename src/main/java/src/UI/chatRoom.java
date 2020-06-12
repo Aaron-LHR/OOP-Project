@@ -84,7 +84,7 @@ public class chatRoom extends JFrame implements ActionListener {
         txtUsr = new JTextField(12);
         txtPwd = new JPasswordField(12);
 
-        txtSrvIP.setText("127.0.0.1");
+        txtSrvIP.setText("39.97.126.242");
 
         btnLgn = new JButton("登陆");
         btnRgst = new JButton("注册");
