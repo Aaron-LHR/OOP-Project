@@ -6,6 +6,7 @@ import com.vdurmont.emoji.EmojiParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class emoji {
 
@@ -34,7 +35,7 @@ public class emoji {
 //            System.out.println(emoji.getUnicode());
 //        }
 
-        System.out.println(EmojiParser.parseToUnicode(":grinning:"));
+        System.out.println(Pattern.matches("!!\\((.*?)\\)!!", "!!(0.gif)!!"));
     }
 
 }

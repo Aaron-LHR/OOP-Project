@@ -107,7 +107,15 @@ public class ReceiveThread implements Runnable {
                                     flag.activateGroup=0;
                                     int n = Integer.parseInt(output[1]);
                                     for (int i = 0; i < n; i++) {
-                                        showMessage();
+                                        output = dis.readUTF().split("@");
+                                        if (Pattern.matches("!!\\((.*?)\\)!!", output[4]) && output[5].trim().contains("emoji")) {
+                                            chatRoom.imgTransfer(output[3], output[4].substring(3, output[4].length()-3));
+                                        }
+                                        else {
+                                            String[] font = output[5].split("#");
+                                            chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                        }
+//                                        showMessage();
                                     }
                                     break;
                             }
@@ -158,7 +166,7 @@ public class ReceiveThread implements Runnable {
                         case "200":
                             flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("emoji")) {
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].trim().equals("emoji")) {
                                     chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
                                 }
                                 else {
@@ -175,7 +183,7 @@ public class ReceiveThread implements Runnable {
                         case "201":
                             flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].equals("emoji")) {
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].trim().equals("emoji")) {
                                     chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
                                 }
                                 else {

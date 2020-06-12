@@ -91,7 +91,7 @@ public class Client {
     }
 
     public static void saveRecord(String localUsername, String toUsername, String content, String font, boolean direction) throws IOException { //direction==true:send   direction==false:receive
-        FileOutputStream fileOutputStream = new FileOutputStream("localRecord/" + localUsername + "##" + toUsername + "##Record", true);
+        FileOutputStream fileOutputStream = new FileOutputStream("localRecord" + File.separator + localUsername + "##" + toUsername + "##Record", true);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         String s;
         if (direction) {
@@ -106,22 +106,28 @@ public class Client {
     }
 
     public static List<String> readRecord(String localUsername, String toUsername) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("localRecord/" + localUsername + "##" + toUsername + "##Record");
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-        int c, i = 0;
-        char[] line = new char[1024];
-        List<String> list= new ArrayList<>();
-        while ((c = inputStreamReader.read())!=-1) {
-            if ((char) c == '\n') {
-                list.add(new String(line));
-                i = 0;
+        try {
+            FileInputStream fileInputStream = new FileInputStream("localRecord" + File.separator + localUsername + "##" + toUsername + "##Record");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            int c, i = 0;
+            char[] line = new char[1024];
+            List<String> list= new ArrayList<>();
+            while ((c = inputStreamReader.read())!=-1) {
+                if ((char) c == '\n') {
+                    list.add(new String(line));
+                    i = 0;
+                }
+                else {
+                    line[i++] = (char) c;
+                }
             }
-            else {
-                line[i++] = (char) c;
-            }
+            inputStreamReader.close();
+            return list;
+        }catch (FileNotFoundException e) {
+            File file = new File("localRecord" + File.separator + localUsername + "##" + toUsername + "##Record");
+            return new ArrayList<>();
         }
-        inputStreamReader.close();
-        return list;
+
     }
 
     public void exit() throws IOException, InterruptedException {
@@ -281,8 +287,9 @@ public class Client {
         }
     }
 
-    public boolean sendFile(File file) throws IOException, InterruptedException {
-        dos.writeUTF("");
+    public boolean sendFile(String username, File file) throws IOException, InterruptedException {
+        long n = (long) Math.ceil(file.length() / 1024.0);
+        dos.writeUTF("##FILE##" + username + "##" + file.getName() + "##" + n);
         FileInputStream fis = new FileInputStream(file);
         byte[] bytes = new byte[1024];
         int length = 0;

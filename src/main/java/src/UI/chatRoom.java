@@ -18,6 +18,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 
 public class chatRoom extends JFrame implements ActionListener {
@@ -323,10 +324,15 @@ public class chatRoom extends JFrame implements ActionListener {
                         try {
                             for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
                                 String[] MessageSplit = loadMessage.split("@");
-                                String[] fontSplit = MessageSplit[2].split("#");
-                                infoTransfer(MessageSplit[1], MessageSplit[0], fontSplit[0], Integer.parseInt(fontSplit[1]), Integer.parseInt(fontSplit[2]), fontSplit[3], fontSplit[4]);
+                                if (Pattern.matches("!!\\((.*?)\\)!!", MessageSplit[1]) && MessageSplit[2].trim().equals("emoji")) {
+                                    imgTransfer(MessageSplit[0], MessageSplit[1].substring(3, MessageSplit[1].length()-3));
+                                }
+                                else {
+                                    String[] fontSplit = MessageSplit[2].split("#");
+                                    infoTransfer(MessageSplit[1], MessageSplit[0], fontSplit[0], Integer.parseInt(fontSplit[1]), Integer.parseInt(fontSplit[2]), fontSplit[3], fontSplit[4]);
+                                }
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | BadLocationException ex) {
                             ex.printStackTrace();
                         }
                     }
@@ -582,7 +588,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     if (val == JFileChooser.APPROVE_OPTION) {
                         try {
                             if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
-                                if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
+                                if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji@")) {
                                     insertIcon(file, toUsername);
                                 }
                                 else {
@@ -590,7 +596,7 @@ public class chatRoom extends JFrame implements ActionListener {
                                 }
                             }
                             else {  //给群聊发消息
-                                if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
+                                if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji@")) {
                                     popWindows("群消息发送失败", "提示");
                                 }
                             }
@@ -623,7 +629,13 @@ public class chatRoom extends JFrame implements ActionListener {
 
                     fileChooser.setCurrentDirectory(dir);
                     int val = fileChooser.showOpenDialog(null);
-                    if (val == JFileChooser.APPROVE_OPTION) fileTransfer(fileChooser.getSelectedFile());
+                    if (val == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            fileTransfer(fileChooser.getSelectedFile());
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
 
                 }
             });
@@ -820,8 +832,8 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
     public void imgTransfer(String name, String imgName) throws BadLocationException {
-        File f = new File("./src");
-        String s = f.getPath() + "/src/main/java/src/Icon/";
+        File f = new File("." + File.separator + "src");
+        String s = f.getPath() + File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon" + File.separator;
         File file = new File(s + imgName);
 
         insertIcon(file, name);
@@ -981,9 +993,13 @@ public class chatRoom extends JFrame implements ActionListener {
 
 
     public void insertIcon(File file, String usrname) throws BadLocationException {
-        File f = new File("./src");
-        String s = f.getPath() + "/main/java/src/Icon";
-        String path = "./" + file.getPath().substring(file.getPath().indexOf("src"), file.getPath().lastIndexOf("/"));
+        File f = new File("." + File.separator + "src");
+        String s = f.getPath() +File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon";
+//        System.out.println(file.getPath().indexOf("src"));
+//        System.out.println(file.getPath().lastIndexOf(File.separator));
+//        System.out.println(file.getPath());
+        String path = "." + File.separator + file.getPath().substring(file.getPath().indexOf("src"), file.getPath().lastIndexOf(File.separator));
+
 
         if (!path.equals(s)) return;
         else if (file != null) {
@@ -999,8 +1015,17 @@ public class chatRoom extends JFrame implements ActionListener {
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
 
-    public void fileTransfer(File file) {
-
+    public void fileTransfer(File file) throws IOException, InterruptedException {
+        if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
+            if (client.sendFile(toUsername, file)) {
+                txtMsg.setText("发送文件:" + file.getName());
+                submitText(getFontAttrib(), strName);
+                txtMsg.setText("");
+            }
+            else {
+                popWindows("发送文件失败", "发送文件");
+            }
+        }
     }
 
     @Override
