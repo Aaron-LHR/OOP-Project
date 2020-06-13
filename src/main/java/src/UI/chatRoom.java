@@ -311,7 +311,9 @@ public class chatRoom extends JFrame implements ActionListener {
                         popWindows(cl.get(0) + "私聊", "会话邀请");
                         btnDel.setVisible(false);
                         btnMember.setVisible(false);
-                        btnFile.setVisible(true);
+                        if (!toUsername.equals(Client.getUsername())) {
+                            btnFile.setVisible(true);
+                        }
                         toUsername = cl.get(0);
                         synchronized (runFlag) {
                             runFlag.setCurToUsername(toUsername);
@@ -486,62 +488,64 @@ public class chatRoom extends JFrame implements ActionListener {
             btnSmt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        String s = txtMsg.getText();
-                        FontAttrib font = getFontAttrib();
-                        String color = "黑色";
-                        String backColor = "无色";
-                        if (Color.BLACK.equals(font.color)) {
-                            color = "黑色";
-                        } else if (Color.red.equals(font.color)) {
-                            color = "红色";
-                        } else if (Color.BLUE.equals(font.color)) {
-                            color = "蓝色";
-                        } else if (Color.YELLOW.equals(font.color)) {
-                            color = "黄色";
-                        } else if (Color.GREEN.equals(font.color)) {
-                            color = "绿色";
-                        }
-                        if (font.backColor != null) {
-                            if (font.backColor.equals(new Color(200, 200, 200))) {
-                                backColor = "灰色";
+                    if (!toUsername.equals("")) {
+                        try {
+                            String s = txtMsg.getText();
+                            FontAttrib font = getFontAttrib();
+                            String color = "黑色";
+                            String backColor = "无色";
+                            if (Color.BLACK.equals(font.color)) {
+                                color = "黑色";
+                            } else if (Color.red.equals(font.color)) {
+                                color = "红色";
+                            } else if (Color.BLUE.equals(font.color)) {
+                                color = "蓝色";
+                            } else if (Color.YELLOW.equals(font.color)) {
+                                color = "黄色";
+                            } else if (Color.GREEN.equals(font.color)) {
+                                color = "绿色";
                             }
-                            else if (font.backColor.equals(new Color(255, 200, 200))) {
-                                backColor = "淡红";
+                            if (font.backColor != null) {
+                                if (font.backColor.equals(new Color(200, 200, 200))) {
+                                    backColor = "灰色";
+                                }
+                                else if (font.backColor.equals(new Color(255, 200, 200))) {
+                                    backColor = "淡红";
+                                }
+                                else if (font.backColor.equals(new Color(200, 200, 255))) {
+                                    backColor = "淡蓝";
+                                }
+                                else if (font.backColor.equals(new Color(255, 255, 200))) {
+                                    backColor = "淡黄";
+                                }
+                                else if (font.backColor.equals(new Color(200, 255, 200))) {
+                                    backColor = "淡绿";
+                                }
                             }
-                            else if (font.backColor.equals(new Color(200, 200, 255))) {
-                                backColor = "淡蓝";
+                            String Font = font.name + "#" + font.style + "#" + font.size + "#" + color + "#" + backColor;
+                            if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
+                                if (!client.sendPrivateMessage(toUsername, s, Font)) {
+                                    popWindows("对方不在线", "提示");
+                                }
+                                else {
+                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                    if (!toUsername.equals(Client.getUsername()))
+                                        submitText(getFontAttrib(), strName, df.format(new Date()));
+                                    txtMsg.setText("");
+                                }
                             }
-                            else if (font.backColor.equals(new Color(255, 255, 200))) {
-                                backColor = "淡黄";
-                            }
-                            else if (font.backColor.equals(new Color(200, 255, 200))) {
-                                backColor = "淡绿";
-                            }
-                        }
-                        String Font = font.name + "#" + font.style + "#" + font.size + "#" + color + "#" + backColor;
-                        if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
-                            if (!client.sendPrivateMessage(toUsername, s, Font)) {
-                                popWindows("对方不在线", "提示");
-                            }
-                            else {
-                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-                                if (!toUsername.equals(Client.getUsername()))
-                                submitText(getFontAttrib(), strName, df.format(new Date()));
-                                txtMsg.setText("");
-                            }
-                        }
-                        else {  //给群聊发消息
-                            if (!client.sendGroupMessage(toUsername, s, Font)) {
-                                popWindows("群消息发送失败", "提示");
-                            }
-                            else {
+                            else {  //给群聊发消息
+                                if (!client.sendGroupMessage(toUsername, s, Font)) {
+                                    popWindows("群消息发送失败", "提示");
+                                }
+                                else {
 //                                submitText(getFontAttrib(), strName);
-                                txtMsg.setText("");
+                                    txtMsg.setText("");
+                                }
                             }
+                        } catch (IOException | InterruptedException ex) {
+                            ex.printStackTrace();
                         }
-                    } catch (IOException | InterruptedException ex) {
-                        ex.printStackTrace();
                     }
                 }
             });
@@ -564,17 +568,18 @@ public class chatRoom extends JFrame implements ActionListener {
             btnImg.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    fileChooser = new JFileChooser();
-                    File f = new File("./src");
-                    String s = f.getPath() + "/main/java/src/Icon";
+                    if (!toUsername.equals("")) {
+                        fileChooser = new JFileChooser();
+                        File f = new File("./src");
+                        String s = f.getPath() + "/main/java/src/Icon";
 
-                    // fileChooser.setAccessory(new ImagePreviewer(fileChooser));
-                    fileChooser.setFileView(new FileView() {
-                        @Override
-                        public ImageIcon getIcon(File f) {
-                            ImageIcon icon = new ImageIcon(f.getPath());
-                            return icon;
-                        }
+                        // fileChooser.setAccessory(new ImagePreviewer(fileChooser));
+                        fileChooser.setFileView(new FileView() {
+                            @Override
+                            public ImageIcon getIcon(File f) {
+                                ImageIcon icon = new ImageIcon(f.getPath());
+                                return icon;
+                            }
 
                         /*
                         @Override
@@ -587,31 +592,32 @@ public class chatRoom extends JFrame implements ActionListener {
                         }
 
                          */
-                    });
+                        });
 
-                    fileChooser.setCurrentDirectory(new File(s));
-                    int val = fileChooser.showOpenDialog(null);
-                    File file = fileChooser.getSelectedFile();
+                        fileChooser.setCurrentDirectory(new File(s));
+                        int val = fileChooser.showOpenDialog(null);
+                        File file = fileChooser.getSelectedFile();
 //                    System.out.println(file.getName());
-                    if (val == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
-                                if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
-                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-                                    if (!toUsername.equals(Client.getUsername()))
-                                    insertIcon(file, toUsername, df.format(new Date()));
+                        if (val == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
+                                    if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
+                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                        if (!toUsername.equals(Client.getUsername()))
+                                            insertIcon(file, toUsername, df.format(new Date()));
+                                    }
+                                    else {
+                                        popWindows("对方不在线", "提示");
+                                    }
                                 }
-                                else {
-                                    popWindows("对方不在线", "提示");
+                                else {  //给群聊发消息
+                                    if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
+                                        popWindows("群消息发送失败", "提示");
+                                    }
                                 }
+                            } catch (BadLocationException | IOException | InterruptedException badLocationException) {
+                                badLocationException.printStackTrace();
                             }
-                            else {  //给群聊发消息
-                                if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
-                                    popWindows("群消息发送失败", "提示");
-                                }
-                            }
-                        } catch (BadLocationException | IOException | InterruptedException badLocationException) {
-                            badLocationException.printStackTrace();
                         }
                     }
                 }
@@ -663,7 +669,7 @@ public class chatRoom extends JFrame implements ActionListener {
                             popWindows("退出群聊成功", "退出群聊");
                             btnDel.setVisible(false);
                             btnMember.setVisible(false);
-                            btnFile.setVisible(true);
+                            btnFile.setVisible(false);
                             toUsername = "";
                             synchronized (runFlag) {
                                 runFlag.setCurToUsername("");
