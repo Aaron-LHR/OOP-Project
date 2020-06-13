@@ -436,7 +436,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
             txtScr.setBounds(175,80, 670, 415);
             txtScr.setBackground(new Color(255, 255, 255));
-            txtScr.setFont(new Font("宋体", 0, 12));
+            // txtScr.setFont(new Font("宋体", 0, 12));
 
             // 字体设置
             fname = new JLabel("字体");
@@ -631,7 +631,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     fileChooser = new JFileChooser();
-                    File dir = FileSystemView.getFileSystemView() .getHomeDirectory();
+                    File dir = FileSystemView.getFileSystemView().getHomeDirectory();
 
                     fileChooser.setCurrentDirectory(dir);
                     int val = fileChooser.showOpenDialog(null);
@@ -703,7 +703,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
             txtScroll.setBounds(175, 560, 670, 113);
             txtScroll.setBackground(new Color(250, 250, 250));
-            txtScroll.setFont(new Font("宋体", 0, 12));
+            // txtScroll.setFont(new Font("宋体", 0, 12));
 
             // 最终添加
             setLayout(null);
@@ -1057,12 +1057,3 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
 }
-
-/*
-class ImagePreviewer extends JLabel {
-    public ImagePreviewer(JFileChooser chooser) {
-        ImageIcon icon =
-    }
-}
-
- */
