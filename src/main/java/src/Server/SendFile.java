@@ -25,7 +25,6 @@ public class SendFile {
             DataInputStream in=new DataInputStream(socket.getInputStream());
             List<byte[]> list=new ArrayList<>();
             synchronized (out){
-                out.writeUTF("@"+fromUser+"@202@"+filename+"@"+len);
                 File file = new File(filename);
                 if (file.exists()) {
                     file.delete();
@@ -35,12 +34,14 @@ public class SendFile {
                 int length = 0;
                 long n =len;
                 while (n > 0) {
-                    in.read(bytes, 0, bytes.length);
-                    fos.write(bytes, 0, bytes.length);
+                    length = in.read(bytes, 0, bytes.length);
+                    fos.write(bytes, 0, length);
                     fos.flush();
                     n--;
                 }
+                new DataOutputStream(socket.getOutputStream()).writeUTF("@"+filename+"@108@0");
                 FileInputStream fis = new FileInputStream(file);
+                out.writeUTF("@"+fromUser+"@202@"+filename+"@"+len);
                 while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
                     out.write(bytes, 0, length);
                     System.out.println(Arrays.toString(bytes));
@@ -56,9 +57,8 @@ public class SendFile {
 //                for (byte[] i:list){
 //                    out.write(i);
 //                }
-
             }
-            new DataOutputStream(socket.getOutputStream()).writeUTF("@"+filename+"@108@0");
+
         }catch (Exception e){
             e.printStackTrace();
             try {

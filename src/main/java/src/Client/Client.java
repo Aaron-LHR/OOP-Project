@@ -26,8 +26,8 @@ public class Client {
 
     static {
         try {
-            client = new Client("39.97.126.242",1111);
-//            client = new Client("localhost",1111);
+//            client = new Client("39.97.126.242",1111);
+            client = new Client("localhost",1111);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,12 +118,11 @@ public class Client {
             char[] line = new char[1024];
             List<String> list= new ArrayList<>();
             while ((c = inputStreamReader.read())!=-1) {
+                line[i++] = (char) c;
                 if ((char) c == '\n') {
                     list.add(new String(line));
                     i = 0;
-                }
-                else {
-                    line[i++] = (char) c;
+                    line = new char[1024];
                 }
             }
             inputStreamReader.close();

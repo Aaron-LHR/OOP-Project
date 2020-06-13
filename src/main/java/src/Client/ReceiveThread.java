@@ -5,6 +5,7 @@ import src.UI.chatRoom;
 import javax.swing.text.BadLocationException;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -207,6 +208,7 @@ public class ReceiveThread implements Runnable {
 //                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
                             break;
                         case "202":
+                            flag.modify = false;
                             File file = new File("Files" + File.separator + output[3]);
                             if (file.exists()) {
                                 file.delete();
@@ -216,8 +218,9 @@ public class ReceiveThread implements Runnable {
                             byte[] bytes = new byte[1024];
                             int length = 0;
                             while (n > 0) {
-                                dis.read(bytes, 0, bytes.length);
-                                fos.write(bytes, 0, bytes.length);
+                                length = dis.read(bytes, 0, bytes.length);
+                                fos.write(bytes, 0, length);
+                                System.out.println(Arrays.toString(bytes));
                                 fos.flush();
                                 n--;
                             }
