@@ -523,7 +523,8 @@ public class chatRoom extends JFrame implements ActionListener {
                                 popWindows("对方不在线", "提示");
                             }
                             else {
-                                submitText(getFontAttrib(), strName);
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                submitText(getFontAttrib(), strName, df.format(new Date()));
                                 txtMsg.setText("");
                             }
                         }
@@ -593,7 +594,8 @@ public class chatRoom extends JFrame implements ActionListener {
                         try {
                             if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
                                 if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji@")) {
-                                    insertIcon(file, toUsername);
+                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                    insertIcon(file, toUsername, df.format(new Date()));
                                 }
                                 else {
                                     popWindows("对方不在线", "提示");
@@ -635,7 +637,8 @@ public class chatRoom extends JFrame implements ActionListener {
                     int val = fileChooser.showOpenDialog(null);
                     if (val == JFileChooser.APPROVE_OPTION) {
                         try {
-                            fileTransfer(fileChooser.getSelectedFile());
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                            fileTransfer(fileChooser.getSelectedFile(), df.format(new Date()));
                         } catch (IOException | InterruptedException ex) {
                             ex.printStackTrace();
                         }
@@ -795,12 +798,10 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
-    public void submitText(FontAttrib attrib, String name) {
+    public void submitText(FontAttrib attrib, String name, String time) {
         synchronized (txtRcd) {
             try { // 插入文本
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-
-                String s1 = df.format(new Date()) + "  " + name + "\n";
+                String s1 = time + "  " + name + "\n";
                 String s2 = attrib.getText() + "\n\n";
 
                 FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
@@ -815,7 +816,7 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
-    public void infoTransfer(String msg, String name, String font_Name, int style, int size, String color, String backCol) {
+    public void infoTransfer(String msg, String name, String font_Name, int style, int size, String color, String backCol, String time) {
         Color c1 = null, c2 = null;
 
         if (color.equals("黑色")) c1 = Color.BLACK;
@@ -835,15 +836,15 @@ public class chatRoom extends JFrame implements ActionListener {
 
         FontAttrib att = new FontAttrib(msg, font_Name, style, size, c1, c2);
 
-        submitText(att, name);
+        submitText(att, name, time);
     }
 
-    public void imgTransfer(String name, String imgName) throws BadLocationException {
+    public void imgTransfer(String name, String imgName, String time) throws BadLocationException {
         File f = new File("." + File.separator + "src");
         String s = f.getPath() + File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon" + File.separator;
         File file = new File(s + imgName);
 
-        insertIcon(file, name);
+        insertIcon(file, name, time);
     }
 
     public FontAttrib getFontAttrib() {
@@ -999,7 +1000,7 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
 
-    public void insertIcon(File file, String usrname) throws BadLocationException {
+    public void insertIcon(File file, String usrname, String time) throws BadLocationException {
         File f = new File("." + File.separator + "src");
         String s = f.getPath() +File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon";
 //        System.out.println(file.getPath().indexOf("src"));
@@ -1010,8 +1011,7 @@ public class chatRoom extends JFrame implements ActionListener {
 
         if (!path.equals(s)) return;
         else if (file != null) {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
-            String s1 = df.format(new Date()) + "  " + usrname + "\n";
+            String s1 = time + "  " + usrname + "\n";
             FontAttrib attrib1 = new FontAttrib(s1, "宋体", 0, 12, Color.BLACK, Color.WHITE);
             doc.insertString(doc.getLength(), s1, attrib1.getAttrSet());
         }
@@ -1022,11 +1022,11 @@ public class chatRoom extends JFrame implements ActionListener {
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
 
-    public void fileTransfer(File file) throws IOException, InterruptedException {
+    public void fileTransfer(File file, String time) throws IOException, InterruptedException {
         if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
             if (client.sendFile(toUsername, file)) {
                 txtMsg.setText("发送文件:" + file.getName());
-                submitText(getFontAttrib(), strName);
+                submitText(getFontAttrib(), strName, time);
                 txtMsg.setText("");
             }
             else {
