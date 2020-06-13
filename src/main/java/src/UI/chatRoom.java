@@ -306,6 +306,7 @@ public class chatRoom extends JFrame implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     List<String> cl = onlineList.getSelectedValuesList();
+                    onlineList.setSelectedIndices(new int[] {});
                     if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) != '群') {    //私聊
                         popWindows(cl.get(0) + "私聊", "会话邀请");
                         btnDel.setVisible(false);
