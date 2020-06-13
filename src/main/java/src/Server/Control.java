@@ -123,7 +123,7 @@ public class Control extends Thread{
                         out.writeUTF(tmp1);
                     }
                     if (buff.indexOf("##FILE##")==0){//传输文件##FILE##toUser##filename##n(按byte[1024]划分的长度)
-                        new SendFile(username,buff.substring(8).split("##")[0],buff.substring(8).split("##")[1],Integer.parseInt(buff.substring(8).split("##")[2]),socket).act();
+                        new SendFile(username,buff.substring(8).split("##")[0],buff.substring(8).split("##")[1],Long.parseLong(buff.substring(8).split("##")[2]),socket).act();
                     }
                 }
             }

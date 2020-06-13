@@ -10,10 +10,11 @@ import java.util.List;
 public class SendFile {
     Socket socket;
     String fromUser,toUser,filename;
-    int len,length;
+    int length;
+    Long len;
     byte[] bytes=new byte[1024];
     List<byte[]> list=new ArrayList<>();
-    public SendFile(String fromUser, String toUser,String filename,int len, Socket socket){
+    public SendFile(String fromUser, String toUser,String filename,Long len, Socket socket){
         this.filename=filename;
         this.len=len;
         this.fromUser=fromUser;

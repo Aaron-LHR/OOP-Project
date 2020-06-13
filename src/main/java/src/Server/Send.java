@@ -31,7 +31,7 @@ public class Send{//@fromUser@content
                 Socket send=Server.online.get(toUser);
                 DataOutputStream sout=new DataOutputStream(send.getOutputStream());
                 out.writeUTF("@"+toUser+"@101@0");
-                String msg="@"+fromUser+"@200@"+content+"@"+font;
+                String msg="@"+fromUser+"@200@"+content+"@"+font+"@";
                 synchronized (send){
                     sout.writeUTF(msg);
                 }

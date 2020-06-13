@@ -3,6 +3,8 @@ package src.Server;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GroupChat {
     Socket socket;
@@ -38,8 +40,10 @@ public class GroupChat {
             FileOutputStream fos=new FileOutputStream(group,true);
             OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
             BufferedWriter bw = new BufferedWriter(osw);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             bw.write(Server.chgl);
-            bw.write("@"+tmp[2]+"@201@" + tmp[3] + "@" + tmp[4]+ "@"+tmp[5]);//在文件中：以@群聊名字+群主用户名@201@name(发送方用户名)@content@字体存储
+            bw.write("@"+tmp[2]+"@201@" + tmp[3] + "@" + tmp[4]+ "@"+tmp[5]+"@"+df.format(new Date()));
+                //在文件中：以@群聊名字+群主用户名@201@name(发送方用户名)@content@字体@时间 存储
             bw.close();
             Server.groupLock.get(tmp[2]).writeLock().unlock();
 
@@ -54,7 +58,7 @@ public class GroupChat {
                 if (s1!=null){
                     synchronized (s1){
                         DataOutputStream out1 = new DataOutputStream(s1.getOutputStream());
-                        out1.writeUTF("@"+tmp[2]+"@201@"+tmp[3]+"@"+tmp[4]+"@"+tmp[5]);
+                        out1.writeUTF("@"+tmp[2]+"@201@"+tmp[3]+"@"+tmp[4]+"@"+tmp[5]+"@");
                     }
 
                 }
