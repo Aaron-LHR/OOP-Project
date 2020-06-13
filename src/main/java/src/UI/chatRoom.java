@@ -311,7 +311,7 @@ public class chatRoom extends JFrame implements ActionListener {
                         popWindows(cl.get(0) + "私聊", "会话邀请");
                         btnDel.setVisible(false);
                         btnMember.setVisible(false);
-                        if (!toUsername.equals(Client.getUsername())) {
+                        if (!cl.get(0).equals(Client.getUsername())) {
                             btnFile.setVisible(true);
                         }
                         toUsername = cl.get(0);
@@ -775,14 +775,13 @@ public class chatRoom extends JFrame implements ActionListener {
         try {
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
-            if (username.contains(" ")) {
-                popWindows("用户名不能包含空格", "登录");
+            if (username.contains(" ") || username.equals("")) {
+                popWindows("用户名不能包含空格", "注册");
             }
             else if (client.register(username, password)) {
                 popWindows("注册成功", "注册");
                 strName = username;
                 strPwd = password;
-//                diaLgnFrame.dispose(); // 登录完成后关闭登录页以启动聊天室界面
             }
             else {
                 popWindows("用户名已被占用", "注册");
@@ -796,7 +795,7 @@ public class chatRoom extends JFrame implements ActionListener {
         try {
             String username = txtUsr.getText().trim();
             String password = new String(txtPwd.getPassword()).trim();
-            if (username.contains(" ")) {
+            if (username.contains(" ") || username.equals("")) {
                 popWindows("用户名不能包含空格", "登录");
             }
             switch (client.Login(username, password)) {
