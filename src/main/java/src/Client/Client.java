@@ -100,10 +100,10 @@ public class Client {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         String s;
         if (direction) {
-            s = localUsername + "@" + content + "@" + font + "@" + time + "@" + "\n";
+            s = localUsername + "@" + content + "@" + font + "@" + time + "@" + "\0";
         }
         else {
-            s = toUsername + "@" + content + "@" + font + "@" + time + "@" + "\n";
+            s = toUsername + "@" + content + "@" + font + "@" + time + "@" + "\0";
         }
         outputStreamWriter.write(s, 0, s.length());
         outputStreamWriter.flush();
@@ -119,7 +119,7 @@ public class Client {
             List<String> list= new ArrayList<>();
             while ((c = inputStreamReader.read())!=-1) {
                 line[i++] = (char) c;
-                if ((char) c == '\n') {
+                if ((char) c == '\0') {
                     list.add(new String(line));
                     i = 0;
                     line = new char[1024];
@@ -135,23 +135,27 @@ public class Client {
     }
 
     public void exit() throws IOException, InterruptedException {
-        dos.writeUTF("--" + username);
-        synchronized (runFlag) {
-            while (!runFlag.modify) {
-                runFlag.wait();
-            }
-            if (runFlag.logout == 0) {
-                System.out.println("注销成功");
-                runFlag.modify = false;
-            }
-            else{
-                System.out.println("注销失败");
-                runFlag.modify = false;
-            }
-        }
+//        dos.writeUTF("--" + username);
+//        synchronized (runFlag) {
+//            while (!runFlag.modify) {
+//                runFlag.wait();
+//            }
+//            if (runFlag.logout == 0) {
+//                System.out.println("注销成功");
+//                runFlag.modify = false;
+//            }
+//            else{
+//                System.out.println("注销失败");
+//                runFlag.modify = false;
+//            }
+//        }
+        if (input!=null)
         input.close();
+        if (dos!=null)
         dos.close();
+        if (dis!=null)
         dis.close();
+        if (socket!=null)
         socket.close();
     }
 

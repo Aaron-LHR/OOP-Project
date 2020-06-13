@@ -25,6 +25,7 @@ public class chatRoom extends JFrame implements ActionListener {
     Client client = Client.getInstance();
     Flag runFlag = Flag.getInstance();
     String toUsername = "";
+    Thread thread = new Thread(new ReceiveThread(this));
 
 
     // 聊天界面
@@ -71,7 +72,7 @@ public class chatRoom extends JFrame implements ActionListener {
     String[] str_BackColor = { "无色", "灰色", "淡红", "淡蓝", "淡黄", "淡绿" };
 
     public chatRoom() throws IOException {
-        new Thread(new ReceiveThread(this)).start();
+        thread.start();
 
         // 登录界面
         pnlLgn = new JPanel();
@@ -524,6 +525,7 @@ public class chatRoom extends JFrame implements ActionListener {
                             }
                             else {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                if (!toUsername.equals(Client.getUsername()))
                                 submitText(getFontAttrib(), strName, df.format(new Date()));
                                 txtMsg.setText("");
                             }
@@ -595,6 +597,7 @@ public class chatRoom extends JFrame implements ActionListener {
                             if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
                                 if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
                                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
+                                    if (!toUsername.equals(Client.getUsername()))
                                     insertIcon(file, toUsername, df.format(new Date()));
                                 }
                                 else {
@@ -750,6 +753,7 @@ public class chatRoom extends JFrame implements ActionListener {
     }
 
     public void closeChatFrame() throws IOException, InterruptedException {
+        thread.interrupt();
         client.exit();
         this.dispose();
     }

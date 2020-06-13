@@ -4,6 +4,7 @@ import src.UI.chatRoom;
 
 import javax.swing.text.BadLocationException;
 import java.io.*;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -238,6 +239,8 @@ public class ReceiveThread implements Runnable {
                     }
                     flag.notify();
                 }
+            } catch (SocketException e) {
+                return;
             } catch (IOException | InterruptedException | BadLocationException e) {
                 e.printStackTrace();
             }

@@ -17,13 +17,13 @@ public class Register {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             DataInputStream in = new DataInputStream(socket.getInputStream());
             FileWriter writer = new FileWriter(new File("Account"), true);
-            if (Server.account.containsKey(username)) {
+            if (Server.account.get(username) != null) {
                 //表中有重复用户名
+                Server.account.put(username, passwd);
                 out.writeUTF("@name@1@1");
             } else {
-                writer.write(  username + " " + passwd+"\n");
+                writer.write("\n" + username + " " + passwd);
                 writer.close();
-                Server.account.put(username,passwd);
                 out.writeUTF("@name@1@0");
                 out.flush();
             }
