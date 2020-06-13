@@ -326,11 +326,11 @@ public class chatRoom extends JFrame implements ActionListener {
                             for (String loadMessage : Client.readRecord(Client.getUsername(), toUsername)) {
                                 String[] MessageSplit = loadMessage.split("@");
                                 if (Pattern.matches("!!\\((.*?)\\)!!", MessageSplit[1]) && MessageSplit[2].trim().equals("emoji")) {
-                                    imgTransfer(MessageSplit[0], MessageSplit[1].substring(3, MessageSplit[1].length()-3));
+                                    imgTransfer(MessageSplit[0], MessageSplit[1].substring(3, MessageSplit[1].length()-3), MessageSplit[3]);
                                 }
                                 else {
                                     String[] fontSplit = MessageSplit[2].split("#");
-                                    infoTransfer(MessageSplit[1], MessageSplit[0], fontSplit[0], Integer.parseInt(fontSplit[1]), Integer.parseInt(fontSplit[2]), fontSplit[3], fontSplit[4]);
+                                    infoTransfer(MessageSplit[1], MessageSplit[0], fontSplit[0], Integer.parseInt(fontSplit[1]), Integer.parseInt(fontSplit[2]), fontSplit[3], fontSplit[4], MessageSplit[3]);
                                 }
                             }
                         } catch (IOException | BadLocationException ex) {
@@ -593,7 +593,7 @@ public class chatRoom extends JFrame implements ActionListener {
                     if (val == JFileChooser.APPROVE_OPTION) {
                         try {
                             if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
-                                if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji@")) {
+                                if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
                                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
                                     insertIcon(file, toUsername, df.format(new Date()));
                                 }
@@ -602,7 +602,7 @@ public class chatRoom extends JFrame implements ActionListener {
                                 }
                             }
                             else {  //给群聊发消息
-                                if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji@")) {
+                                if (!client.sendGroupMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
                                     popWindows("群消息发送失败", "提示");
                                 }
                             }
@@ -657,6 +657,9 @@ public class chatRoom extends JFrame implements ActionListener {
                     try {
                         if (client.exitGroup(toUsername)) {
                             popWindows("退出群聊成功", "退出群聊");
+                            btnDel.setVisible(false);
+                            btnMember.setVisible(false);
+                            btnFile.setVisible(true);
                             toUsername = "";
                             synchronized (runFlag) {
                                 runFlag.setCurToUsername("");

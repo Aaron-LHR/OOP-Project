@@ -4,6 +4,8 @@ import src.UI.chatRoom;
 
 import javax.swing.text.BadLocationException;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class ReceiveThread implements Runnable {
@@ -12,7 +14,7 @@ public class ReceiveThread implements Runnable {
     private DataOutputStream dos = client.getDos();
     src.UI.chatRoom chatRoom;
     Flag flag = Flag.getInstance();
-
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
 
     public ReceiveThread(src.UI.chatRoom chatRoom) {
         this.chatRoom = chatRoom;
@@ -23,7 +25,7 @@ public class ReceiveThread implements Runnable {
     private void showMessage() throws IOException {
         String[] onlineList = dis.readUTF().split("@");
         String[] font = onlineList[5].split("#");
-        chatRoom.infoTransfer(onlineList[4], onlineList[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+        chatRoom.infoTransfer(onlineList[4], onlineList[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4], df.format(new Date()));
     }
 
     @Override
@@ -106,11 +108,11 @@ public class ReceiveThread implements Runnable {
                                     for (int i = 0; i < n; i++) {
                                         output = dis.readUTF().split("@");
                                         if (Pattern.matches("!!\\((.*?)\\)!!", output[4]) && output[5].trim().contains("emoji")) {
-                                            chatRoom.imgTransfer(output[3], output[4].substring(3, output[4].length()-3));
+                                            chatRoom.imgTransfer(output[3], output[4].substring(3, output[4].length()-3), output[6]);
                                         }
                                         else {
                                             String[] font = output[5].split("#");
-                                            chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                            chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4], output[6]);
                                         }
 //                                        showMessage();
                                     }
@@ -174,28 +176,28 @@ public class ReceiveThread implements Runnable {
                             flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
                                 if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].trim().equals("emoji")) {
-                                    chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
+                                    chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3), df.format(new Date()));
                                 }
                                 else {
                                     String[] font = output[4].split("#");
-                                    chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                    chatRoom.infoTransfer(output[3], output[1], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4], df.format(new Date()));
                                 }
                             }
                             else {
                                 chatRoom.infoReminder(output[1], true);
                             }
-                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
+                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], df.format(new Date()), false);
                             new Thread(new SendThread(chatRoom)).start();
                             break;
                         case "201": //接收群聊消息    @群聊名字+群主用户名@201@name(发送方用户名)@content@字体
                             flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                if (Pattern.matches("!!\\((.*?)\\)!!", output[3]) && output[4].trim().equals("emoji")) {
-                                    chatRoom.imgTransfer(output[1], output[3].substring(3, output[3].length()-3));
+                                if (Pattern.matches("!!\\((.*?)\\)!!", output[4]) && output[5].trim().equals("emoji")) {
+                                    chatRoom.imgTransfer(output[3], output[4].substring(3, output[4].length()-3), df.format(new Date()));
                                 }
                                 else {
                                     String[] font = output[5].split("#");
-                                    chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4]);
+                                    chatRoom.infoTransfer(output[4], output[3], font[0], Integer.parseInt(font[1]), Integer.parseInt(font[2]), font[3], font[4], df.format(new Date()));
                                 }
                             }
                             else {
@@ -205,6 +207,10 @@ public class ReceiveThread implements Runnable {
 //                            Client.saveRecord(Client.getUsername(), output[1], output[3], output[4], false);
                             break;
                         case "202":
+                            File file = new File("Files" + File.separator + output[3]);
+                            if (file.exists()) {
+                                file.delete();
+                            }
                             FileOutputStream fos = new FileOutputStream("Files" + File.separator + output[3], true);
                             int n = Integer.parseInt(output[4]);
                             byte[] bytes = new byte[1024];
@@ -217,12 +223,12 @@ public class ReceiveThread implements Runnable {
                             }
                             flag.modify = false;
                             if (output[1].equals(flag.curToUsername)) {
-                                chatRoom.infoTransfer("接收文件:" + output[3], output[1], "宋体", 0, 12, "黑色", "无色");
+                                chatRoom.infoTransfer("接收文件:" + output[3], output[1], "宋体", 0, 12, "黑色", "无色", df.format(new Date()));
                             }
                             else {
                                 chatRoom.infoReminder(output[1], true);
                             }
-                            Client.saveRecord(Client.getUsername(), output[1], "接收文件:" + output[3], "宋体#0#12#黑色#无色", false);
+                            Client.saveRecord(Client.getUsername(), output[1], "接收文件:" + output[3], "宋体#0#12#黑色#无色", df.format(new Date()), false);
                             new Thread(new SendThread(chatRoom)).start();
                             fos.close();
                             break;
