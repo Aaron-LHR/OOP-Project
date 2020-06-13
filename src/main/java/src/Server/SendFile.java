@@ -10,7 +10,6 @@ import java.util.List;
 public class SendFile {
     Socket socket;
     String fromUser,toUser,filename;
-    int length;
     Long len;
     byte[] bytes=new byte[1024];
     List<byte[]> list=new ArrayList<>();
@@ -25,11 +24,15 @@ public class SendFile {
         try {
             DataOutputStream out=new DataOutputStream(Server.online.get(toUser).getOutputStream());
             DataInputStream in=new DataInputStream(socket.getInputStream());
+            List<byte[]> list=new ArrayList<>();
             synchronized (out){
                 out.writeUTF("@"+fromUser+"@202@"+filename+"@"+len);
                 for (int i=0;i<len;i++){
-                    length=in.read(bytes,0,bytes.length);
-                    out.write(bytes,0,length);
+                    in.read(bytes,0,bytes.length);
+                    list.add(bytes);
+                }
+                for (byte[] i:list){
+                    out.write(i);
                 }
 
             }
