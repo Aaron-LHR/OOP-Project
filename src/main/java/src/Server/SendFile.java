@@ -1,10 +1,9 @@
 package src.Server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SendFile {
@@ -27,13 +26,36 @@ public class SendFile {
             List<byte[]> list=new ArrayList<>();
             synchronized (out){
                 out.writeUTF("@"+fromUser+"@202@"+filename+"@"+len);
-                for (int i=0;i<len;i++){
-                    in.read(bytes,0,bytes.length);
-                    list.add(bytes);
+                File file = new File(filename);
+                if (file.exists()) {
+                    file.delete();
                 }
-                for (byte[] i:list){
-                    out.write(i);
+                FileOutputStream fos = new FileOutputStream(filename, true);
+                byte[] bytes = new byte[1024];
+                int length = 0;
+                long n =len;
+                while (n > 0) {
+                    in.read(bytes, 0, bytes.length);
+                    fos.write(bytes, 0, bytes.length);
+                    fos.flush();
+                    n--;
                 }
+                FileInputStream fis = new FileInputStream(file);
+                while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
+                    out.write(bytes, 0, length);
+                    System.out.println(Arrays.toString(bytes));
+                    out.flush();
+                    Thread.sleep(200);
+                }
+                fis.close();
+                fos.close();
+//                for (int i=0;i<len;i++){
+//                    in.read(bytes,0,bytes.length);
+//                    list.add(bytes);
+//                }
+//                for (byte[] i:list){
+//                    out.write(i);
+//                }
 
             }
             new DataOutputStream(socket.getOutputStream()).writeUTF("@"+filename+"@108@0");
