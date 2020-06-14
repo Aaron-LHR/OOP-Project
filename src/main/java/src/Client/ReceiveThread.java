@@ -35,6 +35,7 @@ public class ReceiveThread implements Runnable {
         while (true) {
             try {
                 String string = dis.readUTF();
+                System.out.println(string);
                 String[] output = string.split("@");
                 synchronized (flag) {
                     flag.modify = true;
@@ -221,7 +222,7 @@ public class ReceiveThread implements Runnable {
                             while (n > 0) {
                                 length = dis.read(bytes, 0, bytes.length);
                                 fos.write(bytes, 0, length);
-                                System.out.println(Arrays.toString(bytes));
+//                                System.out.println(Arrays.toString(bytes));
                                 fos.flush();
                                 n--;
                             }

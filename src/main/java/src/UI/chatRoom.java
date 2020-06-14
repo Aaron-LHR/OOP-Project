@@ -610,7 +610,7 @@ public class chatRoom extends JFrame implements ActionListener {
                                     if (client.sendPrivateMessage(toUsername, "!!(" + file.getName() + ")!!", "emoji")) {
                                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
                                         if (!toUsername.equals(Client.getUsername()))
-                                            insertIcon(file, toUsername, df.format(new Date()));
+                                            insertIcon(file, Client.getUsername(), df.format(new Date()));
                                     }
                                     else {
                                         popWindows("对方不在线", "提示");
