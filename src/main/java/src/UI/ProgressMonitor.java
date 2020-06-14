@@ -1,9 +1,10 @@
 package src.UI;
 
-import java.io.FileInputStream;
 import java.io.*;
 import javax.swing.JFrame;
 import javax.swing.ProgressMonitorInputStream;
+
+
 public class ProgressMonitor {
 
     public void progressMonitorBar(JFrame frame, InputStream in) {
