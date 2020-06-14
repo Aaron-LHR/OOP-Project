@@ -6,13 +6,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 激活群聊的类，当用户点击群聊发起会话时，该类负责处理
+ * 主要功能是将Group目录下对应的群聊历史文件读取出来，依据协议向客户端发送消息
+ * @author Yzx
+ */
 public class GroupShow{
     Socket socket;
     String name;
+
+    /**
+     * 构造方法
+     * @param name 想要激活的群聊名
+     * @param socket 对应套接字
+     */
     public GroupShow(String name,Socket socket){//##GROUPSHOW##群名+群主
         this.socket=socket;
         this.name=name;
     }
+
+    /**
+     * 启动函数
+     */
     public void act() {
         try {
             OutputStream outputStream=socket.getOutputStream();

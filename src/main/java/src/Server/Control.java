@@ -7,12 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 该类是服务端处理请求的核心类，每个Control线程对应一个客户端以达到较好的并行性，
+ * 其中包含对协议当中的所有请求的处理，
+ * 为了达到线程的同步，该类中当接收到请求之后在处理时就会占用对应的套接字，使得并行的其他线程
+ * 无法向该客户端发送信息
+ * @author Yzx
+ */
 public class Control extends Thread{
     Socket socket;
     String username;
+
+    /**
+     * 构造方法
+     * @param socket Server端传入的已连接套接字
+     */
     public Control(Socket socket){
         this.socket=socket;
     }
+
+    /**
+     * 线程入口
+     */
     @Override
     public void run() {
         super.run();
@@ -133,6 +149,12 @@ public class Control extends Thread{
             Server.online.remove(username);
         }
     }
+
+    /**
+     * 该方法用于返回某个用户加入的所有群聊名
+     * @param name 用户名
+     * @return 加入的所有群的List
+     */
     public static List<String> searchGroup(String name){//返回该成员所在的所有群名
         List<String> list=new ArrayList<>();
         File file = new File("Group/");

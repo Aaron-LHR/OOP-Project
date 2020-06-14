@@ -2,16 +2,31 @@ package src.Server;
 import java.io.*;
 import java.net.*;
 
+/**
+ * 负责处理登录请求的类，当输入符合要求的账号密码时，将账号以及对应的socket加入Server
+ * 中的online图
+ * @author Yzx
+ */
 public class Login{
     public String username;
     private String passwd;
     private Socket socket;
+
+    /**
+     * 构造方法
+     * @param username 接收的用户名
+     * @param passwd 接收的密码
+     * @param socket 对应客户端的套接字
+     */
     public Login(String username,String passwd,Socket socket) {
         this.username=username;
         this.passwd=passwd;
         this.socket=socket;
     }
 
+    /**
+     * 启动函数
+     */
     public void act() {
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
