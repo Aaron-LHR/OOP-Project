@@ -9,7 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Pattern;
-
+/**
+ * 负责从服务端接收
+ * 消息的线程
+ * @author 廉皓然
+ */
 public class ReceiveThread implements Runnable {
     private Client client = Client.getInstance();
     private DataInputStream dis = client.getDis();
@@ -18,6 +22,9 @@ public class ReceiveThread implements Runnable {
     Flag flag = Flag.getInstance();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 设置日期格式
 
+    /**
+     * 构造方法
+     */
     public ReceiveThread(src.UI.chatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }

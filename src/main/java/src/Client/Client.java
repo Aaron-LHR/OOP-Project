@@ -10,9 +10,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * 客户端的总类，负责与服务端
+ * 和UI界面进行交互
+ * @author 廉皓然
+ */
 public class Client {
+    /**
+     * 线程之间交互信息
+     */
     private Flag runFlag = Flag.getInstance();
+    /**
+     * 当前登录用户名
+     */
     private static String username;
 //    private String password;
     BufferedReader input;
@@ -36,7 +46,9 @@ public class Client {
     public static Client getInstance() {
         return client;
     }
-
+    /**
+     * 构造方法
+     */
     private Client(String IP, int port) throws IOException {
         this.IP = IP;
         this.port = port;
@@ -45,6 +57,9 @@ public class Client {
         dis = new DataInputStream(socket.getInputStream());
     }
 
+    /**
+     * 向服务器发送登录请求
+     */
     public int Login(String username_tmp, String password_tmp) throws IOException, InterruptedException {
         dos.writeUTF("!!" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
@@ -75,6 +90,9 @@ public class Client {
         }
     }
 
+    /**
+     * 向服务器发送注册请求
+     */
     public boolean register(String username_tmp, String password_tmp) throws IOException, InterruptedException {
         dos.writeUTF("**" + username_tmp + "##" + password_tmp + "##");
         dos.flush();
@@ -95,6 +113,9 @@ public class Client {
         }
     }
 
+    /**
+     * 在本地保存聊天记录
+     */
     public static void saveRecord(String localUsername, String toUsername, String content, String font, String time, boolean direction) throws IOException { //direction==true:send   direction==false:receive
         FileOutputStream fileOutputStream = new FileOutputStream("localRecord" + File.separator + localUsername + "##" + toUsername + "##Record", true);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
@@ -110,6 +131,9 @@ public class Client {
         outputStreamWriter.close();
     }
 
+    /**
+     * 读取本地聊天记录
+     */
     public static List<String> readRecord(String localUsername, String toUsername) throws IOException {
         try {
             FileInputStream fileInputStream = new FileInputStream("localRecord" + File.separator + localUsername + "##" + toUsername + "##Record");
@@ -134,6 +158,9 @@ public class Client {
 
     }
 
+    /**
+     * 关闭客户端
+     */
     public void exit() throws IOException, InterruptedException {
 //        dos.writeUTF("--" + username);
 //        synchronized (runFlag) {
@@ -171,6 +198,9 @@ public class Client {
 //        this.password = password;
 //    }
 
+    /**
+     * 提供用户名
+     */
     public static String getUsername() {
         return username;
     }
@@ -183,6 +213,9 @@ public class Client {
         return dis;
     }
 
+    /**
+     * 发送私聊消息
+     */
     public boolean sendPrivateMessage(String ToUsername, String s, String font) throws IOException, InterruptedException {
         dos.writeUTF("@" + username + "@" + ToUsername + "@" + s + "@" + font);
         synchronized (runFlag) {
@@ -201,6 +234,9 @@ public class Client {
         }
     }
 
+    /**
+     * 发送群聊消息
+     */
     public boolean sendGroupMessage(String ToUsername, String s, String font) throws IOException, InterruptedException {
         dos.writeUTF("##GROUPCHAT##" + ToUsername + "##" + username + "##" + s + "##" + font); //##GROUPCHAT##name(发送方用户名)##groupname ##content##字体
         synchronized (runFlag) {
@@ -219,6 +255,9 @@ public class Client {
         }
     }
 
+    /**
+     * 获取群聊聊天记录
+     */
     public void activateGroup(String name) throws IOException, InterruptedException {
         dos.writeUTF("##GROUPON##" + name);
         synchronized (runFlag) {
@@ -229,6 +268,9 @@ public class Client {
         }
     }
 
+    /**
+     * 获取当前在线用户列表
+     */
     public String[] getOnlineList() throws IOException, InterruptedException {
         dos.writeUTF("##LIST");
         synchronized (runFlag) {
@@ -240,6 +282,9 @@ public class Client {
         }
     }
 
+    /**
+     * 创建群聊
+     */
     public boolean createGroup(String groupName, String host, String[] usernames) throws IOException, InterruptedException {
         StringBuilder s = new StringBuilder("");
         for (String t : usernames) {
@@ -265,6 +310,9 @@ public class Client {
         }
     }
 
+    /**
+     * 退出群聊
+     */
     public boolean exitGroup(String groupName) throws IOException, InterruptedException {
         dos.writeUTF("##QUITGROUP##" + groupName);
         synchronized (runFlag) {
@@ -284,6 +332,9 @@ public class Client {
         }
     }
 
+    /**
+     * 获取群聊成员列表
+     */
     public String[] getGroupMembers(String groupName) throws IOException, InterruptedException {
         dos.writeUTF("##GList##" + groupName);
         synchronized (runFlag) {
@@ -295,6 +346,9 @@ public class Client {
         }
     }
 
+    /**
+     * 发送文件
+     */
     public boolean sendFile(String ToUsername, File file) throws IOException, InterruptedException {
         long n = (long) Math.ceil(file.length() / 1024.0);
         dos.writeUTF("##FILE##" + ToUsername + "##" + file.getName() + "##" + n);

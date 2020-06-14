@@ -1,5 +1,10 @@
 package src.Client;
 
+/**
+ * 实现接收消息线程与
+ * 发送消息线程的信息交互
+ * @author 廉皓然
+ */
 public class Flag {
     private static Flag flag = new Flag();
     private Flag() {};
