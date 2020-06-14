@@ -22,7 +22,7 @@ public class Register {
                 Server.account.put(username, passwd);
                 out.writeUTF("@name@1@1");
             } else {
-                writer.write("\n" + username + " " + passwd);
+                writer.write(username + " " + passwd + "\n");
                 writer.close();
                 out.writeUTF("@name@1@0");
                 out.flush();
