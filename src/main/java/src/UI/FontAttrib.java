@@ -4,19 +4,22 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 
+
 public class FontAttrib {
     public static final int GENERAL = 0; // 常规
     public static final int BOLD = 1; // 粗体
     public static final int ITALIC = 2; // 斜体
     public static final int BOLD_ITALIC = 3; // 粗斜体
-    // public static final FontAttrib defaultAttr = new FontAttrib();  // 默认格式
 
     public SimpleAttributeSet attrSet = null; // 属性集
     public String text, name; // 要输入的文本和字体名称
     public int style, size; // 样式和字号
     public Color color, backColor; // 文字颜色和背景颜色
 
+
+    // 初始化
     public FontAttrib() {}
+
 
     public FontAttrib(String msg, String name, int style, int size, Color color, Color backCol) {
         setText(msg);
@@ -27,6 +30,8 @@ public class FontAttrib {
         setBackColor(backCol);
     }
 
+
+    // 获取文字样式
     public SimpleAttributeSet getAttrSet() {
         attrSet = new SimpleAttributeSet();
 
@@ -60,6 +65,8 @@ public class FontAttrib {
         return attrSet;
     }
 
+
+    // getter and setter
     public void setAttrSet(SimpleAttributeSet attrSet) {
         this.attrSet = attrSet;
     }

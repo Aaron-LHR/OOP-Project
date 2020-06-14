@@ -1,6 +1,5 @@
 package src.UI;
 
-import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiParser;
 import src.Client.Client;
 import src.Client.Flag;
@@ -43,6 +42,7 @@ public class chatRoom extends JFrame implements ActionListener {
 
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
+
     // 登录界面
     JPanel pnlLgn;
     JLabel lbSrvIP, lbUsr, lbPwd;
@@ -52,15 +52,14 @@ public class chatRoom extends JFrame implements ActionListener {
 
     JDialog diaLgnFrame = new JDialog(this, "登录", true);
 
+
     // 搜索群聊窗口
     groupChat diaGrpChat;
+
 
     // 群聊成员显示窗口
     groupMember grpMember;
 
-    // 表情窗口
-    // emojiImgBox imgBox;
-    // emoji emojiClass;
 
     // 辅助参数
     String strName, strPwd;
@@ -71,6 +70,8 @@ public class chatRoom extends JFrame implements ActionListener {
     String[] str_Color = { "黑色", "红色", "蓝色", "黄色", "绿色" };
     String[] str_BackColor = { "无色", "灰色", "淡红", "淡蓝", "淡黄", "淡绿" };
 
+
+    // 初始化
     public chatRoom() throws IOException {
         thread.start();
 
@@ -301,12 +302,21 @@ public class chatRoom extends JFrame implements ActionListener {
             listScroll.setBackground(new Color(255, 255, 255)); // white
             listScroll.setBounds(5,80, 165, 560);
 
+            // 发起群聊或私聊
             btnChat = new JButton("发起会话");
             btnChat.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     List<String> cl = onlineList.getSelectedValuesList();
+                    for (String s : cl) {
+                        System.out.println(s);
+                    }
                     onlineList.setSelectedIndices(new int[] {});
+                    List<String> pl = onlineList.getSelectedValuesList();
+                    for (String s : pl) {
+                        System.out.println(s);
+                    }
+
                     if (cl.size() == 1 && !toUsername.equals(cl.get(0)) && cl.get(0).charAt(0) != '群') {    //私聊
                         popWindows(cl.get(0) + "私聊", "会话邀请");
                         btnDel.setVisible(false);
@@ -414,12 +424,12 @@ public class chatRoom extends JFrame implements ActionListener {
                             ex.printStackTrace();
                         }
                     }
-                    // 发起群聊或私聊
                 }
             });
             btnChat.setFont(new Font("宋体", 0, 12));
             btnChat.setBounds(5, 640, 80, 30);
 
+            // 刷新在线用户列表
             btnRfrsh = new JButton("刷新");
             btnRfrsh.addActionListener(new ActionListener() {
                 @Override
@@ -440,7 +450,6 @@ public class chatRoom extends JFrame implements ActionListener {
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
             txtScr.setBounds(175,80, 670, 415);
             txtScr.setBackground(new Color(255, 255, 255));
-            // txtScr.setFont(new Font("宋体", 0, 12));
 
             // 字体设置
             fname = new JLabel("字体");
@@ -539,7 +548,6 @@ public class chatRoom extends JFrame implements ActionListener {
                                     popWindows("群消息发送失败", "提示");
                                 }
                                 else {
-//                                submitText(getFontAttrib(), strName);
                                     txtMsg.setText("");
                                 }
                             }
@@ -573,7 +581,6 @@ public class chatRoom extends JFrame implements ActionListener {
                         File f = new File("./src");
                         String s = f.getPath() + "/main/java/src/Icon";
 
-                        // fileChooser.setAccessory(new ImagePreviewer(fileChooser));
                         fileChooser.setFileView(new FileView() {
                             @Override
                             public ImageIcon getIcon(File f) {
@@ -597,7 +604,6 @@ public class chatRoom extends JFrame implements ActionListener {
                         fileChooser.setCurrentDirectory(new File(s));
                         int val = fileChooser.showOpenDialog(null);
                         File file = fileChooser.getSelectedFile();
-//                    System.out.println(file.getName());
                         if (val == JFileChooser.APPROVE_OPTION) {
                             try {
                                 if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
@@ -622,16 +628,6 @@ public class chatRoom extends JFrame implements ActionListener {
                     }
                 }
             });
-
-            /*
-            btnImg.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    popImgBox();
-                }
-            });
-
-             */
             btnImg.setFont(new Font("宋体", 0, 12));
             btnImg.setBounds(595, 535, 80, 30);
 
@@ -713,7 +709,6 @@ public class chatRoom extends JFrame implements ActionListener {
                     TitledBorder.DEFAULT_POSITION, new Font("宋体", 0, 12), new Color(135, 206, 250)));
             txtScroll.setBounds(175, 560, 670, 113);
             txtScroll.setBackground(new Color(250, 250, 250));
-            // txtScroll.setFont(new Font("宋体", 0, 12));
 
             // 最终添加
             setLayout(null);
@@ -753,7 +748,6 @@ public class chatRoom extends JFrame implements ActionListener {
 
             // 设置界面可见
             setVisible(true);
-            // receive();
 
         }
 
@@ -925,33 +919,33 @@ public class chatRoom extends JFrame implements ActionListener {
         return att;
     }
 
+
     // 弹出提示信息
     public void popWindows(String strWarning, String strTitle) {
         JOptionPane.showMessageDialog(this, strWarning, strTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /* 弹出表情包
-    public void popImgBox() {
-        imgBox = new emojiImgBox(chatRoomFrame, txtMsg, emoji.getEmojiUnicode());
-    }
-
-     */
 
     // 弹出成员列表
     public void popGrpMember() throws IOException, InterruptedException {
         grpMember = new groupMember(chatRoomFrame, getMemList());
     }
 
+
+    // 获取群聊成员
     public String[] getMemList() throws IOException, InterruptedException {
         return client.getGroupMembers(toUsername);
     }
 
+
+    // 获取在线用户
     public String[] getOnlineList() throws IOException, InterruptedException {
         return client.getOnlineList();
     }
 
+
+    // 来信提醒
     public void infoReminder(String name, boolean flag) throws IOException, InterruptedException {
-//        onlineList.setListData(getOnlineList());
         onlineList.setCellRenderer(new DefaultListCellRenderer(){
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -970,20 +964,10 @@ public class chatRoom extends JFrame implements ActionListener {
                 return this;
             }
         });
-
-//        popWindows(name + "向你发送信息", "消息提示");
-//
-//        onlineList.setCellRenderer(new DefaultListCellRenderer(){
-//            @Override
-//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//                String s = (String)value;
-//                if (s.equals(name))  setBackground(Color.WHITE);
-//                return this;
-//            }
-//        });
     }
 
+
+    // 清空聊天区
     public void clearBox() throws BadLocationException {
         remove(txtScr);
         remove(txtRcd);
@@ -1004,6 +988,8 @@ public class chatRoom extends JFrame implements ActionListener {
         validate();
     }
 
+
+    // 刷新
     public void refresh() {
         try {
             onlineList.setListData(getOnlineList());
@@ -1012,18 +998,18 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
+
+    // 弹出群聊提示
     public String popGrpChat() {
         diaGrpChat = new groupChat(chatRoomFrame);
         return diaGrpChat.GroupName;
     }
 
 
+    // 显示表情
     public void insertIcon(File file, String usrname, String time) throws BadLocationException {
         File f = new File("." + File.separator + "src");
         String s = f.getPath() +File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon";
-//        System.out.println(file.getPath().indexOf("src"));
-//        System.out.println(file.getPath().lastIndexOf(File.separator));
-//        System.out.println(file.getPath());
         String path = "." + File.separator + file.getPath().substring(file.getPath().indexOf("src"), file.getPath().lastIndexOf(File.separator));
 
 
@@ -1040,6 +1026,8 @@ public class chatRoom extends JFrame implements ActionListener {
         doc.insertString(doc.getLength(), attrib.getText() + "\n\n", attrib.getAttrSet());
     }
 
+
+    // 显示文件传输信息
     public void fileTransfer(File file, String time) throws IOException, InterruptedException {
         if (toUsername.charAt(0) != '群') {  //给私聊用户发消息
             if (client.sendFile(toUsername, file)) {
@@ -1055,6 +1043,8 @@ public class chatRoom extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {}
+
+
 
     public static void main(String[] args) throws IOException {
         try {//修改风格

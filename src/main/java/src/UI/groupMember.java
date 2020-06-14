@@ -7,11 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class groupMember {
+
+    // 所需属性
     JDialog diaGrpMember;
     JList grpMemList;
     JScrollPane grpMemScroll;
     JButton btnBack;
 
+
+    // 初始化
     public groupMember(JFrame frame, String[] memList) {
         diaGrpMember = new JDialog(frame, "群聊成员列表", true);
         

@@ -7,12 +7,15 @@ import java.awt.event.ActionListener;
 
 public class groupChat {
 
+    // 所需属性
     JDialog diaGrpChatFrame;
     JLabel lbGrpChat;
     JTextField txtGrpChat;
     JButton btnConfirm, btnCancel;
     String GroupName;
 
+
+    // 初始化
     public groupChat(JFrame room) {
         diaGrpChatFrame = new JDialog(room, "加入群聊", true);
         lbGrpChat = new JLabel("请输入群聊名称：");
