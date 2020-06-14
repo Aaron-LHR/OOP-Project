@@ -6,14 +6,29 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 该类为处理群聊的核心文件，当接收到客户端的群聊请求时，首先在
+ * Group目录找到对应文件后读取群成员
+ * 然后在Server的online图中查找，向在线的群成员发送群消息
+ * @author Yzx
+ */
 public class GroupChat {
     Socket socket;
     String buff;
+
+    /**
+     * 构造方法
+     * @param buff 处理的信息格式为：##GROUPCHAT##群聊名字+群主用户名##name(发送方用户名)##content##font
+     * @param socket 对应套接字
+     */
     public GroupChat(String buff, Socket socket){//群聊：##GROUPCHAT##群聊名字+群主用户名##name(发送方用户名)##content##font
         this.socket=socket;
         this.buff=buff;
     }
 
+    /**
+     * 启动方法
+     */
     public void act() {
         try {
             OutputStream outputStream=socket.getOutputStream();

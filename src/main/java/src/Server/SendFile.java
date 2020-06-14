@@ -6,12 +6,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 负责文件传输的类
+ */
 public class SendFile {
     Socket socket;
     String fromUser,toUser,filename;
     Long len;
     byte[] bytes=new byte[1024];
     List<byte[]> list=new ArrayList<>();
+
+    /**
+     * 构造方法
+     * @param fromUser 发送方用户名
+     * @param toUser 接收方用户名
+     * @param filename 发送文件的内容
+     * @param len 发送文件的长度(以byte[1024]为单位)
+     * @param socket 对应套接字
+     */
     public SendFile(String fromUser, String toUser,String filename,Long len, Socket socket){
         this.filename=filename;
         this.len=len;
@@ -19,6 +31,10 @@ public class SendFile {
         this.toUser=toUser;
         this.socket=socket;
     }
+
+    /**
+     * 启动方法
+     */
     public void act(){
         try {
             DataOutputStream out=new DataOutputStream(Server.online.get(toUser).getOutputStream());

@@ -3,15 +3,31 @@ package src.Server;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * 负责处理注册请求的类
+ * 处理时将符合要求的账号密码写入文件，并加入Server类中的account图
+ * @author Yzx
+ */
 public class Register {
     public String username;
     private String passwd;
     private Socket socket;
+
+    /**
+     * 构造函数
+     * @param username 注册的用户名
+     * @param passwd 密码
+     * @param socket 对应套接字
+     */
     public Register(String username,String passwd,Socket socket) {
         this.username=username;
         this.passwd=passwd;
         this.socket=socket;
     }
+
+    /**
+     * 启动方法
+     */
     public void act() {
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());

@@ -6,14 +6,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 退出群聊，当用户想要退出群聊时该类负责处理
+ * @author Yzx
+ */
 public class DelGroup{
     String username;
     String groupname;
+
+    /**
+     * 构造方法
+     * @param username 想要退群的用户名
+     * @param groupname 群聊名
+     */
     public DelGroup(String username,String groupname){
         this.username=username;
         this.groupname=groupname;
     }
 
+    /**
+     * 启动方法
+     */
     public void act(){
         try {
             List<String> list=Control.searchGroup(username);
