@@ -50,7 +50,8 @@ public class Server {
             BufferedReader br = new BufferedReader(isr);
             while ((line=br.readLine())!=null) {
                 String[] tmp=line.split(" ");
-                account.put(tmp[0],tmp[1]);
+                if(tmp.length==2)
+                    account.put(tmp[0],tmp[1]);
             }
 
         } catch (Exception e) {
