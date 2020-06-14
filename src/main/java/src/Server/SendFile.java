@@ -46,7 +46,7 @@ public class SendFile {
                     out.write(bytes, 0, length);
                     System.out.println(Arrays.toString(bytes));
                     out.flush();
-                    Thread.sleep(200);
+//                    Thread.sleep(200);
                 }
                 fis.close();
                 fos.close();

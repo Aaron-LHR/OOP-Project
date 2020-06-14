@@ -305,7 +305,7 @@ public class Client {
             dos.write(bytes, 0, length);
             System.out.println(Arrays.toString(bytes));
             dos.flush();
-            Thread.sleep(200);
+//            Thread.sleep(200);
         }
         fis.close();
         synchronized (runFlag) {
