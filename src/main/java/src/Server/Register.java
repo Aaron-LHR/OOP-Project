@@ -19,9 +19,9 @@ public class Register {
             FileWriter writer = new FileWriter(new File("Account"), true);
             if (Server.account.get(username) != null) {
                 //表中有重复用户名
-                Server.account.put(username, passwd);
                 out.writeUTF("@name@1@1");
             } else {
+                Server.account.put(username, passwd);
                 writer.write(username + " " + passwd + "\n");
                 writer.close();
                 out.writeUTF("@name@1@0");
