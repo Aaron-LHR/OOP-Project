@@ -5,6 +5,10 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 
 
+/** a self-defined public class which controls text style
+ *  @author 康曦文
+ *  @since 13.0.2
+ * */
 public class FontAttrib {
     public static final int GENERAL = 0; // 常规
     public static final int BOLD = 1; // 粗体
@@ -20,7 +24,14 @@ public class FontAttrib {
     // 初始化
     public FontAttrib() {}
 
-
+    /** initialize function
+     *  @param msg
+     *  @param name
+     *  @param style
+     *  @param size
+     *  @param color
+     *  @param backCol
+     * */
     public FontAttrib(String msg, String name, int style, int size, Color color, Color backCol) {
         setText(msg);
         setName(name);

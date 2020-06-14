@@ -6,6 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+/** a self-defined class for group member box
+ *  @author 康曦文
+ *  @since 13.0.2
+ * */
 public class groupMember {
 
     // 所需属性
@@ -15,7 +20,10 @@ public class groupMember {
     JButton btnBack;
 
 
-    // 初始化
+    /** initialize function
+     *  @param frame
+     *  @param memList
+     * */
     public groupMember(JFrame frame, String[] memList) {
         diaGrpMember = new JDialog(frame, "群聊成员列表", true);
         

@@ -5,6 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+/** a self-defined class for group chat box
+ * @author 康曦文
+ * @since 13.0.2
+ */
 public class groupChat {
 
     // 所需属性
@@ -15,7 +20,9 @@ public class groupChat {
     String GroupName;
 
 
-    // 初始化
+    /** initialize function
+     *  @param room
+     * */
     public groupChat(JFrame room) {
         diaGrpChatFrame = new JDialog(room, "加入群聊", true);
         lbGrpChat = new JLabel("请输入群聊名称：");

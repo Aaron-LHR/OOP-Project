@@ -5,6 +5,10 @@ import javax.swing.JFrame;
 import javax.swing.ProgressMonitorInputStream;
 
 
+/** a self-defined public class for file load process
+ *  @author 康曦文
+ *  @since 13.0.2
+ * */
 public class ProgressMonitor {
 
     public void progressMonitorBar(JFrame frame, InputStream in) {

@@ -20,14 +20,18 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 
+/** 这是一个继承 JFrame 的 chatRoom 自定义类
+ *  @author 康曦文
+ *  @since 13.0.2
+ * */
 public class chatRoom extends JFrame implements ActionListener {
     Client client = Client.getInstance();
     Flag runFlag = Flag.getInstance();
     String toUsername = "";
     Thread thread = new Thread(new ReceiveThread(this));
 
-
-    // 聊天界面
+    /** 这是登录界面成员变量
+     * */
     JPanel topBar;
     JLabel lbPort, lbIP, lbName, fname, fsize, fstyle, fcolor, fbackcol;
     JTextField txtPort, txtIP, txtName;
@@ -43,7 +47,8 @@ public class chatRoom extends JFrame implements ActionListener {
     JFrame chatRoomFrame = new JFrame("Java聊天室");
 
 
-    // 登录界面
+    /** 这是聊天室界面成员变量
+     * */
     JPanel pnlLgn;
     JLabel lbSrvIP, lbUsr, lbPwd;
     JTextField txtSrvIP, txtUsr, txtShift;
@@ -53,15 +58,18 @@ public class chatRoom extends JFrame implements ActionListener {
     JDialog diaLgnFrame = new JDialog(this, "登录", true);
 
 
-    // 搜索群聊窗口
+    /** 这是搜索群聊界面成员变量
+     * */
     groupChat diaGrpChat;
 
 
-    // 群聊成员显示窗口
+    /** 这是群聊成员显示窗口成员变量
+     * */
     groupMember grpMember;
 
 
-    // 辅助参数
+    /** 这是辅助参数
+     * */
     String strName, strPwd;
     boolean flag = true;
     String[] str_Name = { "宋体", "黑体", "Dialog", "Gulim" };
@@ -71,7 +79,9 @@ public class chatRoom extends JFrame implements ActionListener {
     String[] str_BackColor = { "无色", "灰色", "淡红", "淡蓝", "淡黄", "淡绿" };
 
 
-    // 初始化
+    /** initialize function
+     *  @throws IOException
+     * */
     public chatRoom() throws IOException {
         thread.start();
 
@@ -753,18 +763,31 @@ public class chatRoom extends JFrame implements ActionListener {
 
     }
 
+
+    /** close chatRoomFrame function
+     *  @throws IOException
+     *  @throws InterruptedException
+     * */
     public void closeChatFrame() throws IOException, InterruptedException {
         thread.interrupt();
         client.exit();
         this.dispose();
     }
 
+
+    /** close diaLgnFrame function
+     *  @throws IOException
+     *  @throws InterruptedException
+     * */
     public void closeDiaLgnFrame() throws IOException, InterruptedException {
         diaLgnFrame.dispose();
         flag = false;
         closeChatFrame();
     }
 
+
+    /** register function
+     * */
     public void UsrRgst() {
         try {
             String username = txtUsr.getText().trim();
@@ -785,6 +808,9 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
+
+    /** login function
+     * */
     public void UsrLogin() {
         try {
             String username = txtUsr.getText().trim();
@@ -810,6 +836,12 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
+
+    /** insert text function
+     *  @param attrib
+     *  @param name
+     *  @param time
+     * */
     public void submitText(FontAttrib attrib, String name, String time) {
         synchronized (txtRcd) {
             try { // 插入文本
@@ -828,6 +860,17 @@ public class chatRoom extends JFrame implements ActionListener {
         }
     }
 
+
+    /** message transfer function
+     *  @param msg
+     *  @param name
+     *  @param font_Name
+     *  @param style
+     *  @param size
+     *  @param color
+     *  @param backCol
+     *  @param time
+     * */
     public void infoTransfer(String msg, String name, String font_Name, int style, int size, String color, String backCol, String time) {
         Color c1 = null, c2 = null;
 
@@ -851,6 +894,13 @@ public class chatRoom extends JFrame implements ActionListener {
         submitText(att, name, time);
     }
 
+
+    /** image transfer function
+     *  @param name
+     *  @param imgName
+     *  @param time
+     *  @throws BadLocationException
+     * */
     public void imgTransfer(String name, String imgName, String time) throws BadLocationException {
         File f = new File("." + File.separator + "src");
         String s = f.getPath() + File.separator + "main" + File.separator + "java" + File.separator + "src" + File.separator + "Icon" + File.separator;
@@ -859,6 +909,10 @@ public class chatRoom extends JFrame implements ActionListener {
         insertIcon(file, name, time);
     }
 
+
+    /** get text style function
+     *  @return FontAttrib
+     * */
     public FontAttrib getFontAttrib() {
         FontAttrib att = new FontAttrib();
 
@@ -1045,7 +1099,10 @@ public class chatRoom extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {}
 
 
-
+    /** main function
+     *  @param args
+     *  @throws IOException
+     * */
     public static void main(String[] args) throws IOException {
         try {//修改风格
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
